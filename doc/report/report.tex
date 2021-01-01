@@ -1,1031 +1,124 @@
 % Copyright (C) 2020-2021 Diogo Rodrigues, Breno Pimentel
 % Distributed under the terms of the GNU General Public License, version 3
 
-\documentclass[a4paper, 11pt]{report}
-\usepackage[top=35mm,bottom=35mm,left=25mm,right=25mm]{geometry} % Margins
+\documentclass[runningheads]{llncs}
 
-% Change section numbers
-\renewcommand{\thesection}{\arabic{section}}
+\usepackage{graphicx}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following line
+% to display URLs in blue roman font according to Springer's eBook style:
+% \renewcommand\UrlFont{\color{blue}\rmfamily}
 
-% Second page
-\usepackage{secondpage}
-\usepackage{datetime}
-
-% Appendix
-\usepackage{appendix}
-
-% Landscape pages
-\usepackage{pdflscape}
-\usepackage{multicol}
-\setlength\columnsep{50pt}
-
-% Decent underlines
-\usepackage[normalem]{ulem}
-
-% Hyper-references
-\usepackage{hyperref}
-
-% Imports
-\usepackage{import}
-
-% Graphics and images
-\usepackage{graphicx} \graphicspath{{./images/}}
-\usepackage{tikz}
-\usepackage{tikz-qtree}
-\usetikzlibrary{automata, positioning, arrows}
-\usepackage[justification=centering,font=small,skip=0.5em]{caption}
-\usepackage{subcaption}
-\usepackage{float}
-
-\usepackage[binary-units=true]{siunitx} %SI units
-\usepackage{pgfplots}
-\pgfplotsset{compat=newest} % Allows to place the legend below plot
-\usepgfplotslibrary{units} % Allows to enter the units nicely
-\sisetup{
-  round-mode          = places,
-  round-precision     = 2,
-}
-
-% Encodings (to render letters with diacritics and special characters)
-\usepackage[utf8]{inputenc}
-
-% Language
-\usepackage[english]{babel}
-
-% Source code and algorithms
-%\usepackage{amsmath}
-\usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
-\usepackage{listings}
-\lstset{
-	basicstyle=\linespread{0.85}\ttfamily,
-	basewidth  = {0.50em,1em},
-    frame=tbr, % draw frame at top and bottom of the code
-    tabsize=4, % tab space width
-    numbers=left, % display line numbers on the left
-	showstringspaces=false, % don't mark spaces in strings    
-    commentstyle=\color{green}, % comment color
-    keywordstyle=\color{blue}, % keyword color
-	stringstyle=\color{red} % string color
-}
-
-% Tables with bold rows
-\usepackage{tabularx}
-\newcommand\setrow[1]{\gdef\rowmac{#1}#1\ignorespaces}
-\newcommand\clearrow{\global\let\rowmac\relax}
-\clearrow
-\usepackage{multirow}
-
-% Tables with vertical center alignment
-\usepackage{array}
-
-% Lists and items
-\usepackage{enumitem}
-
-% Math stuff
-\usepackage[mathscr]{euscript}
-\usepackage{amssymb, latexsym} %Load math symbols like \blacksquare, but also load normal \leadsto arrows
-\usepackage{mathtools} % For \text{...}
-% \usepackage{enumitem}
-% \usepackage{xcolor}
-\newcommand{\expnumber}[2]{{#1}\mathrm{e}{#2}} % scientific notation
-\newcommand{\degree}{^{\circ}}
-\newcommand*\xor{\oplus}
-\newcommand\expected[1]{\mathbf{E}[#1]}
-
-% Headers and footers
-\usepackage{fancyhdr}
-\pagestyle{fancyplain}
-\fancyhf{}
-\lhead{\fancyplain{}{Serial port data protocol — Report (RCOM 2020/21)}}
-\rhead{\fancyplain{}{Class 2, group 4}}
-\lfoot{\fancyplain{}{\leftmark}}
-\rfoot{\thepage}
-
-% Email
-\newcommand{\email}[1]{
-{\texttt{\href{mailto:#1}{#1}} }
-}
-
-% Metadata
-\title{\Huge Serial port data protocol \\ \Large Report \\ \vspace*{4pt} \large FEUP - RCOM 2020/21}
-\author{
-Class 2, group 4 \vspace{0.5em} \\
-\begin{tabular}{r l}
-	\email{up201800170@fe.up.pt} & Breno Accioly de Barros Pimentel \\
-	\email{up201806429@fe.up.pt} & Diogo Miguel Ferreira Rodrigues  \\
-\end{tabular}
-}
-\date{10th of November, 2020}
-
-% Document
 \begin{document}
-\maketitle
-\begin{secondpage}
-    Copyright \copyright 2020--\the\year\ Diogo Rodrigues, Breno Pimentel\par
-    \IfFileExists{VERSION}{Version \input{VERSION}}{Draft version}\par
-    \immediate\write18{./get-commit-info.sh > COMMIT.tex}
-    Built on \today~\currenttime~from \href{https://github.com/dmfrodrigues/feup-plog-tp2}{dmfrodrigues/feup-plog-tp2}, commit \input{COMMIT}\unskip.\par
-    Permission is granted to copy and distribute this document under the terms of the
-    \href{https://creativecommons.org/licenses/by-nc-nd/4.0/}{Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International}
-    public license.
-\end{secondpage}
-\clearpage
+\title{TuCoTuTeCo - Allocating students to classes during COVID-19}
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+\author{Diogo Miguel Ferreira Rodrigues (\email{diogo.rodrigues@fe.up.pt})\inst{1},\\
+Breno Accioly de Barros Pimentel (\email{up201800170@fe.up.pt})\inst{1}}
 
-\pagenumbering{arabic}
+\authorrunning{D. Rodrigues and B. Pimentel}
 
-\section*{Summary}
+\institute{
+Faculty of Engineering -- University of Porto, Portugal\\
+PLOG -- Class 3MIEIC02, Group TuCoTuTeCo\_4
+}
+%
+\maketitle              % typeset the header of the contribution
+%
+\begin{abstract}
+The abstract should briefly summarize the contents of the paper in
+150--250 words.
 
-This project was elaborated as the first project in the context of the curricular unit Computer Networks (RCOM), part of the Integrated Master in Informatics and Computing Engineering (MIEIC) at the Faculty of Engineering of the University of Porto (FEUP).
-It concerns the design and implementation of a data link protocol to allow two computers to communicate in a reliable way through serial ports, and subsequent testing using a simple file transfer application.
-The implementation was also statistically analysed to determine which parameters affect the protocol's efficiency.
+\keywords{
+First keyword \and
+Second keyword \and
+Another keyword.}
+\end{abstract}
 
-All objectives were fulfilled, as we successfully implemented in C a reliable protocol for transmitting files, with proven efficacy and robustness; we additionally analysed experimental data related to this protocol's efficiency and compared it to expected theoretical results.
+\section{First Section}
+\subsection{A Subsection Sample}
+Please note that the first paragraph of a section or subsection is
+not indented. The first paragraph that follows a table, figure,
+equation etc. does not need an indent, either.
 
-\section{Introduction} \label{sec:Introduction}
+Subsequent paragraphs, however, are indented.
 
-The present project aims at arriving at a design and implementation of a data link layer with its own data transfer protocol to allow communication between two computers physically connected through RS-232 serial ports with asynchronous communication in a Null-Modem configuration, and an independent application layer with its own protocol to transfer a file between computers. The resulting source code was developed in the C language, targeting Linux devices.
+\subsubsection{Sample Heading (Third Level)} Only two levels of
+headings should be numbered. Lower level headings remain unnumbered;
+they are formatted as run-in headings.
 
-This report has the purpose of guiding the reader through the process used to fulfill the project's goals. As such, this report is divided into seven sections (excluding \hyperref[sec:Introduction]{introduction} and \hyperref[sec:Conclusion]{conclusion}). In section \ref{sec:Architecture} we describe the layered architecture our program will follow in terms generic interfaces between layers, to then specify in section \ref{sec:CodeStructure} which specific layers implement the generic blocks of the previous section, and for each layer the data structures it uses and the interface it will make available for inter-layer communication. Specific information for the end user on the main ways to use the program is presented in section \ref{sec:UseCases}. In sections \ref{sec:LLProtocol} and \ref{sec:AppProtocol} we identify the main functional aspects and implementation details of the logical link and application protocols respectively. Finally, in section \ref{sec:Validation} we test the program to validate it in terms of efficacy and robustness, and in section \ref{sec:Efficiency} we statistically describe the protocol's experimental efficiency and compare it to a theoretical \textit{stop-and-wait} protocol. This project was tested in the computers of FEUP, room I321, bench 3, with rack computer 3 as transmitter and the computer with connection to FEUP network as receiver.
+\paragraph{Sample Heading (Fourth Level)}
+The contribution should contain no more than four levels of
+headings. Table~\ref{tab1} gives a summary of all heading levels.
 
-In this project/report, a \textit{byte} always stands for an 8-bit byte.
-
-\section{Architecture} \label{sec:Architecture}
-
-First of all, we designed the generic architecture of our system, Figure \ref{fig:architecture}. It consists of:
-\begin{itemize}
-	\itemsep0em
-	\item A data link layer, which deals with the serial port and exposes an interface (open/close serial ports, write/read) to allow a reasonably reliable, synchronous communication of framed data between two computers with basic error-checking. It does not directly interact with the physical layer, but rather with its driver through file/terminal abstractions.
-	\item An application layer, providing a command line interface to transfer a file in a set of packets through the data link layer. It formally implements an OSI network layer (to transfer packets) and an application layer (user interface) which is what is effectively required in this case because the computers are directly connected nodes.
-\end{itemize}
-\begin{figure}[H]
-	\centering
-	\begin{tikzpicture}[-,>=stealth',node distance=1.4cm,initial text=$ $,]
-		\node[align=center, draw, minimum width=7cm, minimum height=1.4cm] (app) {Application layer};
-		\node[align=center, draw, minimum width=7cm, minimum height=1.4cm, fill=black!10, below of=app] (link) {Data link layer};
-		\node[align=center, minimum width=7cm, minimum height=1.4cm, fill=black!20, below of=link] (driver) {Serial port driver \\ {\footnotesize \texttt{/dev/ttyS0}}};
-		\node[align=center, minimum width=7cm, minimum height=1.4cm, fill=black!30, below of=driver] (hardware) {Physical layer \\ {\footnotesize RS-232 asynchronous serial port}};
-		\node[align=center, above of=app] at (0, +0.7) (user){\includegraphics[scale=0.2]{actor.png}};
-	
-		\draw (-3.5, -2.1) rectangle ++(7, -2.8);
-		\draw[dashed] (-3.5, -3.5) -- ++(7, 0);
-
-		\draw[->](app) 		edge[align=center, left , bend right=88.5		] node{\small open port \\[-0.2em] \small write to port \\[-0.2em] \small close port} (link)
-				(link) 		edge[align=center, right, bend right=88.5		] node{\small read from port} (app)
-				(link) 		edge[align=center, left , bend right=88.5		] node{\small \texttt{open} \\[-0.2em] \small \texttt{tcsetattr} \\[-0.2em] \small \texttt{write}} (driver)
-				(driver) 	edge[align=center, right, bend right=88.5		] node{\small \texttt{tcgetattr} \\[-0.2em] \small \texttt{read}} (link)
-				(user) 		edge[align=center, left , bend right=60			] node{\small file to be transferred} (app)
-				(app) 		edge[align=center, right, bend right=60			] node{\small transferred file} (user)
-			;
-	\end{tikzpicture}
-	\caption{Architecture of the program to be developed} \label{fig:architecture}
-\end{figure}
-
-\section{Code structure} \label{sec:CodeStructure}
-
-\begin{figure}[H]
-	\centering
-	\begin{tikzpicture}[->,>=stealth',node distance=2cm,initial text=$ $,]
-		\node[align=center] at (-4.5, +2.2) (actor-transmitter){\includegraphics[scale=0.2]{actor.png}};
-		\node[align=center] at (+4, +2.2) (actor-receiver)   {\includegraphics[scale=0.2]{actor.png}};
-		\node[align=center, draw, minimum width=5cm, minimum height=1.3cm] at (-4.5, -0.3) (transmitter) {Transmitter \\ \footnotesize \texttt{transmitter} at \texttt{COM1}};
-		\node[align=center, draw, minimum width=5cm, minimum height=1.3cm] at (+4, -0.3) (receiver) {Receiver \\ \footnotesize \texttt{receiver} at \texttt{COM2}};
-		\node[align=center, draw, minimum width=5cm, minimum height=1.3cm, fill=black!10] at (-4.5, -2.6) (ll-transmitter) {Link Layer (LL) \\ \footnotesize \texttt{status=TRANSMITTER}};
-		\node[align=center, draw, minimum width=5cm, minimum height=1.3cm, fill=black!10] at (+4, -2.6) (ll-receiver) {Link Layer (LL) \\ \footnotesize \texttt{status=RECEIVER}};
-		\node[align=center, draw, minimum width=5cm, minimum height=1.3cm, fill=black!20] at (-4.5, -5.2) (driver-transmitter) {Serial port driver \\ \footnotesize \texttt{/dev/ttyS0}};
-		\node[align=center, draw, minimum width=5cm, minimum height=1.3cm, fill=black!20] at (+4, -5.2) (driver-receiver) {Serial port driver \\ \footnotesize \texttt{/dev/ttyS1}};
-		\node[align=center, draw, minimum width=5cm, minimum height=1.3cm, fill=black!30] at (-4.5, -7.2) (port-transmitter) {RS-232 serial port \\ \footnotesize \texttt{COM1}};
-		\node[align=center, draw, minimum width=5cm, minimum height=1.3cm, fill=black!30] at (+4, -7.2) (port-receiver) {RS-232 serial port \\ \footnotesize \texttt{COM2}};
-
-		\node[align=right] at (-8.3, -0.3) (app) {Application \\ layer};
-		\node[align=right] at (-8.15, -2.6) (ll) {Data link \\ layer};
-		\node[align=right] at (-8.25, -5.2) (app) {Serial port \\ drivers};
-		\node[align=right] at (-8.2, -7.2) (app) {Physical \\ layer};
-		
-		\path   (-5, -3.25) 	edge[align=center, left		] node{\small \texttt{open}, \texttt{close} \\[-0.2em] \small \texttt{tcsetattr}} (-5, -4.55)
-				(+3.5, -3.25) 	edge[align=center, left		] node{\small \texttt{open}, \texttt{close} \\[-0.2em] \small \texttt{tcsetattr}} (+3.5, -4.55)
-
-				(-4, -4.55) 	edge[align=center, right	] node{\small \texttt{tcgetattr}} (-4, -3.25)
-				(+4.5, -4.55) 	edge[align=center, right	] node{\small \texttt{tcgetattr}} (+4.5, -3.25)
-
-				(-5, -5.85) 	edge[align=center, left		] node{} (-5, -6.55)
-				(+3.5, -5.85) 	edge[align=center, left		] node{} (+3.5, -6.55)
-
-				(-4, -6.55) 	edge[align=center, right	] node{} (-4, -5.85)
-				(+4.5, -6.55) 	edge[align=center, right	] node{} (+4.5, -5.85)
-
-				;
-
-		\draw	(actor-transmitter)		edge[								]	node{\small \texttt{./transmitter 1 pinguim.gif}}	(transmitter)
-				(receiver)				edge[								]	node{\small \texttt{./receiver 2}}	(actor-receiver)
-
-				(transmitter)			edge[dashed, above					] node{\textit{transferring file...}} (receiver)
-
-				(transmitter) 			edge[align=center, right	] node{\small \texttt{llopen}, \texttt{llclose}} (ll-transmitter)
-				(receiver) 				edge[align=center, left		] node{\small \texttt{llopen}, \texttt{llclose}} (ll-receiver)
-
-				(ll-transmitter) 		edge[dashed, align=center, above	] node{\small \texttt{llwrite} / \texttt{llread}} (ll-receiver)
-
-				(driver-transmitter) 	edge[dashed, align=center, above	] node{\small \texttt{write} / \texttt{read}} (driver-receiver)
-
-				(port-transmitter) 		edge[-, double, double distance=3pt, align=center, above	] node{\small physical cable} (port-receiver)
-			;
-	\end{tikzpicture}
-	\caption{Specific code structure to be implemented for this project}
-\end{figure}
-
-We implemented two layers to satisfy the previously presented architecture: two executable files \texttt{transmitter} and \texttt{receiver} in module \texttt{app} as the application layer, and module \texttt{ll} (Link Layer, LL) as the data link layer.
-
-\subsection{App interface}
-
-The \texttt{app} module makes available two executable files:
-\begin{itemize}
-	\itemsep0em
-	\item \texttt{./transmitter <COM> <file>}, to send file \texttt{<file>} to port \texttt{<COM>}.
-	\item \texttt{./receiver <COM>}, to receive a file from port \texttt{<COM>}.
-\end{itemize}
-where \texttt{<COM>} is the port to use (\texttt{COM1} corresponds to \texttt{ttyS0}, \texttt{COM2} to \texttt{ttyS1}, ...), and \texttt{<file>} is a file path. This module uses the LL interface to transfer a file in packets, not too large to reduce the frame error probability, and not too small to reduce the number of non-data bytes. Communication parameters can be customized using optional arguments, see appendix \ref{ch:args}.
-
-\subsection{LL interface}
-
-The \texttt{ll} module makes available the following C functions through file \texttt{ll.h}, which are meant to be used by the \texttt{app} module executable files:
-\begin{itemize}
-	\itemsep0em
-	\item \texttt{int llopen(int com, ll\_status\_t status)}, to open serial port \texttt{com} (1 for \texttt{COM1}, 2 for \texttt{COM2}, ...) with a certain \texttt{status} (\texttt{TRANSMITTER} or \texttt{RECEIVER}). Returns the connection ID on success, and a negative if an error occurred.
-	\item \texttt{int llwrite(int id, const char *buffer, int length)} writes the first \texttt{length} bytes of \texttt{buffer} (up to \texttt{LL\_MAX\_SIZE} bytes) to connection with ID \texttt{id}; returns the number of written bytes, or a negative if an error occurred.
-	\item \texttt{int llread(int id, char *buffer)} reads from the connection with ID \texttt{id} to \texttt{buffer}; \texttt{buffer} must have a size of at least \texttt{LL\_MAX\_SIZE} bytes. Returns the number of written bytes, or a negative if an error occurred.
-	\item \texttt{int llclose(int id)} closes connection with ID \texttt{id}. Returns 0 on success, or a negative otherwise.
-\end{itemize}
-
-To use these functions, one just needs to allocate the buffers with proper sizes. You can also configure the transmission by using custom values for \texttt{ll\_config}, of type \texttt{ll\_config\_t}.
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{l | p{12cm}}
-		\hline \hline
-		\textbf{Field}           & \textbf{Description} \\ \hline
-		\texttt{baud\_rate}      & Number of bits transmitted per second; defaults to 38400. Any number may be specified, but only a few specific baud rates can be used; as such, the baud rate is rounded up to the next allowed baud rate, unless it is above the maximum baud rate, 230400. Is loaded on call to \texttt{llopen}. \\ \hline
-		\texttt{timeout}         & Time the transmitter waits before retransmitting a message that the receiver did not acknowledge. It is measured in integer seconds, and is than zero. By default it is 3 seconds, and can be set at any time. \\ \hline
-		\texttt{retransmissions} & Number of times a frame will be retransmitted before giving up and terminating the connection. Defaults to 3, and can be set at any time. \\ \hline
-		\texttt{verbosity}       & If the program is compiled in debug mode, logs will be printed if they are less or as verbose as the value of this field.\\ \hline \hline
-	\end{tabular}
-	\caption{Fields of \texttt{ll\_config\_t}, and their descriptions}
+\begin{table}
+\caption{Table captions should be placed above the
+tables.}\label{tab1}
+\begin{tabular}{|l|l|l|}
+\hline
+Heading level &  Example & Font size and style\\
+\hline
+Title (centered) &  {\Large\bfseries Lecture Notes} & 14 point, bold\\
+1st-level heading &  {\large\bfseries 1 Introduction} & 12 point, bold\\
+2nd-level heading & {\bfseries 2.1 Printing Area} & 10 point, bold\\
+3rd-level heading & {\bfseries Run-in Heading in Bold.} Text follows & 10 point, bold\\
+4th-level heading & {\itshape Lowest Level Heading.} Text follows & 10 point, italic\\
+\hline
+\end{tabular}
 \end{table}
 
-\section{Main use cases} \label{sec:UseCases}
 
-Assuming \texttt{COM11} of the transmitter computer and \texttt{COM12} of the receiver computer are connected.
-
-\subsection{App programs}
-
-First, start the receiver and connect it to \texttt{COM12} to read the file by calling
-
-\begin{lstlisting}[frame=none, numbers=none, language=sh]
-./receiver 12
-\end{lstlisting}
-Then, start the transmitter and connect it to \texttt{COM11} to write file \texttt{pinguim.gif} by calling
-
-\begin{lstlisting}[frame=none, numbers=none, language=sh]
-./transmitter 11 pinguim.gif
-\end{lstlisting}
-	
-\subsection{Link Layer (LL)}
-
-To read from serial port \texttt{COM12}/\texttt{ttyS11}:
-\begin{enumerate}
-	\itemsep0em
-	\item Open the serial port with \texttt{id = llopen("/dev/ttyS11", RECEIVER)}.
-	\item Allocate \texttt{buffer} with at least \texttt{LL\_MAX\_SIZE} bytes, and read data with \texttt{llread(id, buffer)}.
-	\item Close the serial port with \texttt{llclose(id)}.
-\end{enumerate}
-To write to serial port \texttt{COM11}/\texttt{ttyS10}:
-\begin{enumerate}
-	\itemsep0em
-	\item Open the serial port with \texttt{id = llopen("/dev/ttyS10", TRANSMITTER)}.
-	\item Write data with \texttt{llwrite(id, buffer, length)}.
-	\item Close the serial port with \texttt{llclose(id)}.
-\end{enumerate}
-
-For one call to \texttt{llopen} or \texttt{llclose} in the transmitter, there must be exactly one corresponding call in the receiver; additionally, for each call to \texttt{llwrite} in the transmitter there must be exactly one corresponding call to \texttt{llread} in the receiver. Although it is possible to swap roles (the transmitter can read, and the receiver can write) as-is, it is not advised and will currently return an error to prevent misusage.
-
-\section{Logical link protocol} \label{sec:LLProtocol}
-
-LL uses a logical link protocol that applies the automatic repeat request method for error-control, which consists of a transfer-acknowledgement process where the receiver only evaluates the consistency of a frame and does not try to correct it; instead it asks the transmitter to retransmit the whole frame. More specifically, a form of \textit{stop-and-wait} was implemented, in which a frame is only sent after the previous frame was sent and the respective acknowledgement was received. This allows synchronous communication over an unreliable transfer media.
-
-Communication through this protocol is done by \textit{framing} messages in three types of frames: supervisory frames (S-frames), which are used to supervise the communication; unnumbered frames (U-frames), which are used for other miscellaneous purposes, including to acknowledge the reception of a non-data frame; and information frames (I-frames), which contain the actual data to be transferred, Figure \ref{fig:frames}. In particular, S-frames are used to transmit SET (set up), DISC (disconnect), RR (receiver ready) and REJ (rejected) commands, and U-frames for UA (unnumbered acknowledgement).
-
-\begin{figure}[H]
-	\centering
-	\begin{tabular}{c p{8mm} c}
-		\begin{tikzpicture}[-triangle 90,>=stealth',node distance=2cm,initial text=$ $,scale=0.95]
-			\scriptsize
-			\node[align=center, draw, minimum width=2.5cm, minimum height=0.95cm] at (-1.5, 0.8) (transmitter) {\small Transmitter};
-			\node[align=center, draw, minimum width=2.5cm, minimum height=0.95cm] at (+1.5, 0.8) (receiver)    {\small Receiver};
-			\node[align=center] at (-2.4, -1.5) (establishment) {\footnotesize \textbf{\rotatebox{90}{Establishment}}};
-			\node[align=center] at (-2.4, -5.2) (establishment) {\footnotesize \textbf{\rotatebox{90}{Transmission}}};
-			\node[align=center] at (-2.4, -8.9) (establishment) {\footnotesize \textbf{\rotatebox{90}{Termination}}};
-
-			\path 	(-1.5, +0.3) edge[-, dashed] node{} ++(0, -10.7)
-					(+1.5, +0.3) edge[-, dashed] node{} ++(0, -10.7);
-
-
-			\draw [fill = white]
-					(-1.7, -0.0) rectangle ++(0.4, -1.5)
-					(+1.3, -1.7) rectangle ++(0.4, -0.5)
-					(-1.7, -2.4) rectangle ++(0.4, -1.0)
-					(+1.3, -3.6) rectangle ++(0.4, -1.0)
-					(-1.7, -4.8) rectangle ++(0.4, -1.0)
-					(+1.3, -6.0) rectangle ++(0.4, -1.0)
-					(-1.7, -7.2) rectangle ++(0.4, -0.7)
-					(+1.3, -8.1) rectangle ++(0.4, -0.5)
-					(-1.7, -8.8) rectangle ++(0.4, -0.5)
-					(+1.3, -9.5) rectangle ++(0.4, -0.5)
-					;
-
-			\draw
-					(-2.9, -0.2) rectangle (1.9, - 2.8)
-					(-2.9, -2.9) rectangle (1.9, - 7.5)
-					(-2.9, -7.6) rectangle (1.9, -10.2)
-					;
-			
-			\path
-					(-1.3, -1.4)	edge[above]	node{SET} 				++(+2.6, -0.4)
-					(+1.3, -2.1)	edge[above]	node{UA}  				++(-2.6, -0.4)
-					(-1.3, -3.3)	edge[above]	node{I ($N_s = 0$)} 	++(+2.6, -0.4)
-					(+1.3, -4.5)	edge[above]	node{RR ($N_r = 1$)}	++(-2.6, -0.4)
-					(-1.3, -5.7)	edge[above]	node{I ($N_s = 1$)} 	++(+2.6, -0.4)
-					(+1.3, -6.9)	edge[above]	node{RR ($N_r = 0$)} 	++(-2.6, -0.4)
-					(-1.3, -7.8)	edge[above]	node{DISC} 				++(+2.6, -0.4)
-					(+1.3, -8.5)	edge[above]	node{DISC} 				++(-2.6, -0.4)
-					(-1.3, -9.2)	edge[above]	node{UA} 				++(+2.6, -0.4)
-					;
-
-		\end{tikzpicture} & &
-		\begin{tikzpicture}[-triangle 90,>=stealth',node distance=2cm,initial text=$ $,scale=0.95]
-			\scriptsize
-			\node[align=center, draw, minimum width=2.5cm, minimum height=0.95cm] at (-1.5, 0.8) (transmitter) {\small Transmitter};
-			\node[align=center, draw, minimum width=2.5cm, minimum height=0.95cm] at (+1.5, 0.8) (receiver)    {\small Receiver};
-
-			\node[] at (+0.2, -1.2) (lightning-1)    {\includegraphics[scale=0.015]{lightning.png}};
-			\node[] at (-0.2, -5.4) (lightning-2)    {\includegraphics[scale=0.015]{lightning.png}};
-
-			\node[align=center] at (+2.6, -7.7) (discarded) {Data \\ discarded \\ (already \\ received)};
-	
-			\path 	(-1.5, +0.3) edge[-, dashed] node{} ++(0, -10.7)
-					(+1.5, +0.3) edge[-, dashed] node{} ++(0, -10.7);
-	
-	
-			\draw [fill = white]
-					(-1.7, -0.0) rectangle ++(0.4, -1.0)
-
-					(-1.7, -3.0) rectangle ++(0.4, -1.0)
-					(+1.3, -4.2) rectangle ++(0.4, -1.0)
-
-					(-1.7, -6.0) rectangle ++(0.4, -1.0)
-					(+1.3, -7.2) rectangle ++(0.4, -1.0)
-					(-1.7, -8.4) rectangle ++(0.4, -1.0)
-					
-					;
-			
-			\path
-					(-1.3, -0.9)	edge[above right]	node{I ($N_s = 0$)} 	++(+1.3, -0.2)
-
-					(-1.3, -3.9)	edge[above		]	node{I ($N_s = 0$)} 	++(+2.6, -0.4)
-					(+1.3, -5.1)	edge[above left	]	node{RR ($N_r = 1$)} 	++(-1.3, -0.2)
-
-					(-1.3, -6.9)	edge[above		]	node{I ($N_s = 0$)} 	++(+2.6, -0.4)
-					(+1.3, -8.1)	edge[above 		]	node{RR ($N_r = 1$)} 	++(-2.6, -0.4)
-					;
-	
-			\path
-					(-2.15, -0.0)	edge[-				]	node{}					(-1.85, -0.0)
-					(-2.0, -0.0)	edge[<->, left		]	node{\rotatebox{90}{timeout}}			(-2.0, -3.0)
-					(-2.15, -3.0)	edge[-				]	node{}					(-1.85, -3.0)
-					(-2.0, -3.0)	edge[<->, left		]	node{\rotatebox{90}{timeout}}			(-2.0, -6.0)
-					(-2.15, -6.0)	edge[-				]	node{}					(-1.85, -6.0)
-					;
-
-		\end{tikzpicture} \\
-		(\textit{a}) & & (\textit{b})
-	\end{tabular}
-	\caption{Sequence diagrams of communication through LL: \\ (\textit{a}) complete diagram without errors; (\textit{b}) transmission phase with errors}
-	\label{fig:diagrams}
-\end{figure}
-
-This protocol is suited with a mechanism that allows the receiver to identify if the arriving frame is a retransmission or not: the sequence number. It is a single bit, referred to as $N_s$ when it is sent by the sender, and $N_r$ when sent by the receiver. It is sent along with I-frames, and when $N_s=0$ the response must have $N_r = 1$, and when $N_s = 1$, $N_r = 0$.  
-
-\begin{figure}[H]
-	\centering
-	\begin{tabular}{m{6mm} m{120mm}}
-		(\textit{a}) & 
-		\begin{tikzpicture}[->,>=stealth',node distance=2cm,initial text=$ $,]
-			\small
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (0, 0) (f-start) {F};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (1.2, 0) (a) {A};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (2.4, 0) (c) {C};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (3.6, 0) (bcc) {BCC};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (4.8, 0) (f-end) {F};
-		\end{tikzpicture}\\[10pt]
-		(\textit{b}) & 
-		\begin{tikzpicture}[->,>=stealth',node distance=2cm,initial text=$ $,]
-			\small
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (0, 0) (f-start) {F};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (1.2, 0) (a) {A};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (2.4, 0) (c) {C};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (3.6, 0) (bcc) {BCC1};
-			\node[align=center,       minimum width=1.2cm, minimum height=1.2cm] at (4.8, 0) (d1) {$\text{D}_1$};
-			\node[align=center, dashed, draw, minimum width=2.4cm, minimum height=1.2cm] at (6.6, 0) (data) {...};
-			\node[align=center,       minimum width=1.2cm, minimum height=1.2cm] at (8.4, 0) (dk) {$\text{D}_K$};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (9.6, 0) (bcc2) {BCC2};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (10.8, 0) (f-end) {F};
-
-			\draw[line width=2pt]	(4.2, -0.6) rectangle ++(4.8, 1.2);
-		\end{tikzpicture}
-	\end{tabular}
-	\caption{Structure of the S/U-frames (\textit{a}) and I-frames (\textit{b}). Each square represents a byte}
-	\label{fig:frames}
-\end{figure}
-
-The meaning of the bytes that constitute the frames are as follows:
-
-\begin{itemize}
-	\itemsep0em
-	\item Flag (F, FLAG, \texttt{0x7E}): marks the beginning and end of a frame.
-	\item Address (A): identifier of the sender, or of the destination if it is an answer. Takes values \texttt{0x03} for the transmitter and \texttt{0x01} for the receiver.
-	\item Control (C): identifies the command; \texttt{0x03} for SET, \texttt{0x0B} for DISC, \texttt{0x07} for UA, \texttt{0b0S000000} for I, \texttt{0bR0000101} for RR and \texttt{0bR0000001} for REJ, where $\texttt{S} = N_s$ and $\texttt{R} = N_r$.
-	\item Block check character (BCC): exclusive-or ($\xor$) of a certain range of bytes; BCC and BCC1 are $\text{A}\xor\text{C}$, and BCC2 is $\text{D}_1 \xor \text{D}_2 \xor ... \xor \text{D}_N$. Is used to check for bit swaps.
-	\item Data (D): data bytes, encoded using byte stuffing.
-\end{itemize}
-
-Frame reception was implemented using state machines. Frame reception was implemented using different automatons (in appendix \ref{ch:automatons}), to allow for the right transitions in each situation and to save up space, as an I-frame automaton requires a buffer but an S/U-frame does not.
-
-\subsection{Byte stuffing}
-
-We applied the byte stuffing encoding method suggested in the project guidelines, which consists of defining an escape byte ESC (\texttt{0x7E}), and if character $c$ is equal to FLAG or ESC it is replaced by ESC followed by $c' = c \xor \texttt{0x20}$; a byte $c'$ after ESC can be easily decoded by applying $c' \xor \texttt{0x20} = c \xor \texttt{0x20} \xor \texttt{0x20} = c$. This disambiguates the situation where a data byte (or BCC2) $c$ could be confused with FLAG.
-
-\section{Application protocol} \label{sec:AppProtocol}
-
-The application protocol is used for file transfer using methods exposed by the LL interface. It consists of reading the original file and sending it in small packets to the receiver. This protocol uses control packets to signal the start and end of file transmission and transfer file metadata, and data packets to transfer file chunks.
-
-\begin{figure}[H]
-	\centering
-	\begin{tabular}{m{6mm} m{132mm}}
-		(\textit{a}) &
-		\begin{tikzpicture}[->,>=stealth',node distance=2cm,initial text=$ $,]
-			\small
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (0, 0) (c) {C};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (1.2, 0) (t1) {$\text{T}_1$};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (2.4, 0) (l1) {$\text{L}_1$};
-			\node[align=center, draw, minimum width=2.4cm, minimum height=1.2cm] at (4.2, 0) (v1) {$\text{V}_1$};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (6.0, 0) (t2) {$\text{T}_2$};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (7.2, 0) (l2) {$\text{L}_2$};
-			\node[align=center, draw, minimum width=2.4cm, minimum height=1.2cm] at (9.0, 0) (v2) {$\text{V}_2$};
-			\node[align=center, dashed, draw, minimum width=2.4cm, minimum height=1.2cm] at (11.4, 0) (packets) {...};
-
-			\draw[line width=2pt]	(0.6, -0.6) rectangle ++(4.8, 1.2)
-									(5.4, -0.6) rectangle ++(4.8, 1.2);
-		\end{tikzpicture}\\[10pt]
-		(\textit{b}) &
-		\begin{tikzpicture}[->,>=stealth',node distance=2cm,initial text=$ $,]
-			\small
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (0, 0) (c) {C};
-			\node[align=center, draw, minimum width=1.2cm, minimum height=1.2cm] at (1.2, 0) (n) {N};
-			\node[align=center, draw, minimum width=2.4cm, minimum height=1.2cm] at (3.0, 0) (l) {$\text{L}$};
-			\node[align=center, minimum width=1.2cm, minimum height=1.2cm] at (4.8, 0) (p1) {$\text{P}_1$};
-			\node[align=center, dashed, draw, minimum width=2.4cm, minimum height=1.2cm] at (6.6, 0) (packets) {...};
-			\node[align=center, minimum width=1.2cm, minimum height=1.2cm] at (8.4, 0) (pk) {$\text{P}_K$};
-
-			\draw[line width=2pt]	(4.2, -0.6) rectangle ++(4.8, 1.2);
-		\end{tikzpicture}
-	\end{tabular}
-	\caption{Structure of the control packet (\textit{a}) and the data packet (\textit{b})}
-	\label{fig:control_packet}
-\end{figure}
-
-The meaning of each field is as follows:
-\begin{itemize}
-	\itemsep0em
-	\item Control field (C): Determines the type of packet. Has value \texttt{0x02} for a \textit{start} packet, \texttt{0x03} for an \textit{end} packet, and \texttt{0x01} for a data packet.
-	\item Type ($\text{T}_i$), Length ($\text{L}_i$), Value ($\text{V}_i$): Encoding of parameter to be sent, includes its type (\texttt{0x00} for file size, or \texttt{0x01} for file name), length in bytes, and its value.
-	\item Sequence number (N): Sequence number of the data chunk, modulo 255.
-	\item Packet length ($\text{L}$): Number of bytes in the data field; uses two bytes, $\text{L}'_1$ and $\text{L}'_2$, where the length is $256*\text{L}'_1 + \text{L}'_2$.
-	\item $\text{P}_1$ to $\text{P}_K$: $K$ bytes of the data field, corresponding to a file chunk.
-\end{itemize}
-
-The transmitter first sends a \textit{start} control packet, with the name and size of the file.
-It then sends the data packets with the sequential number and ends with an \textit{end} control packet,
-this having the same data as the first one.
-
-Meanwhile, the receiver gathers information about the file with the support of the control packets and reconstructs the original file from the data packets. 
-It also detects corrupted data, in which case it exits with error as its protocol does not establish an error-control method.
-
-\section{Validation} \label{sec:Validation}
-
-In order to validate the implementation of the protocols, the application was tested with several files, of distinct types and sizes, and different baud rates. 
-Furthermore, errors were artificially introduced to evaluate the program's robustness.
-The implementation showed positive results, being capable of effectively transferring files with frame error rates up to 65\%.
-Tests performed by the teacher during in-class demonstration in bench 5 confirmed the program's robustness.
-
-To test the program, run command \texttt{make test} after creating virtual serial ports between \texttt{ttyS10} and \texttt{ttyS11}.
-These tests include running the transmitter alone, and running the transmitter after and before the receiver.
-Correct file transmission was verified using the \texttt{cmp} command.
-Similar procedures were followed in remote and local tests in the provided hardware.
-
-\section{Efficiency of the data link protocol} \label{sec:Efficiency}
-
-This protocol's efficiency was studied by varying the following parameters:
-\begin{itemize}
-	\itemsep0em
-	\item Ratio of propagation time to frame transfer time, $a = \overline{T_{prop}}/\overline{T_f}$;
-	\item Frame error rate (FER), $R_e = N_e/(N-N_t)$.
-\end{itemize}
-
-All statistics were performed using the \texttt{stats} module. The values of the above parameters were experimentally determined using the following formulas, obtained from appendix \ref{ch:statistics}:
-\begin{center}
-	\vspace{-10pt}
-	\begin{tabular}{c c c}
-		\begin{minipage}{40mm}\begin{equation*}
-			a = \frac{C(T - N_t T_t)}{2 L} - \frac{1}{2}
-		\end{equation*}\end{minipage} &
-		\begin{minipage}{25mm}\begin{equation*}
-			R_e = \frac{N_e}{N-N_t}
-		\end{equation*}\end{minipage} &
-		\begin{minipage}{25mm}\begin{equation*}
-			S = \frac{L_f}{T C}
-		\end{equation*}\end{minipage}
-	\end{tabular}
-\end{center}
-
-The default parameter values are $\Delta \tau = 0$, $p_d=p_h=0$, $C=\SI{115200}{\bit/\second}$ and packet size $\SI{128}{\byte}$.
-Parameter $a$ as varied by changing the artificial propagation delay $\Delta \tau$, and $R_e$ was varied by changing the probability of a data bit swap $p_d$.
-$C$ and packet size were directly varied, but in the case of packet size we chose to plot efficiency versus inverse packet size $\overline{L_p}$, because it has a much clearer linear relation with $S$.
-
-Parameters $a$, $R_e$, $C$ and packet size were initially varied independently, Figure \ref{fig:S_a_Re}.
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.38\textwidth}
-		\begin{tikzpicture}[baseline]
-			\scriptsize
-			\begin{axis}[
-				height=74mm,
-				width=63.5mm,
-				grid=major,
-				grid style={dashed,black!50},
-				xlabel={$a=T_{prop}/T_f$}, % Set the labels
-				xmin=0, xmax=2.5, xtick distance=0.5, x tick label style={rotate=90},
-				ylabel={Efficiency $S$},
-				ymin=0, ymax=0.8,
-				ytick distance=0.1,
-			]
-				\addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=a,y=S,col sep=comma] {vary-tau-processed.csv};
-			\end{axis}
-		\end{tikzpicture}
-	\end{subfigure}%
-	\begin{subfigure}[t]{0.31\textwidth}
-		\hspace{-1.45em}
-		\begin{tikzpicture}[baseline]
-			\scriptsize
-			\begin{axis}[
-				height=74mm,
-				width=63.5mm,
-				grid=major,
-				grid style={dashed,black!50},
-				xmin=0, xmax=0.7, xtick distance=0.1, xlabel=Frame error rate $R_e$, x tick label style={rotate=90},
-				ymin=0, ymax=0.8, ytick distance=0.1, yticklabels={,,}
-			]
-				\addplot[only marks, blue, mark=*, mark options={mark size=1.5pt}] table[x=Re,y=S,col sep=comma] {vary-fre.csv};
-				\addplot[mark=none, black] {-0.64856632*x+0.63867854} node[right, align=left] at (0.13, 0.65) {$y=-0.6485663+0.6386785$\\$r^2=0.999914$};
-			\end{axis}
-		\end{tikzpicture}
-	\end{subfigure}%
-	\begin{subfigure}[t]{0.31\textwidth}
-		\hspace{-1.35em}
-		\begin{tikzpicture}[baseline]
-			\scriptsize
-			\begin{axis}[
-				height=74mm,
-				width=63.5mm,
-				grid=major,
-				grid style={dashed,black!50},
-				xmin=0, xmax=25, xtick distance=5, xlabel=Inverse size $1/\overline{L_p}$ ($\SI{}{{\kibi\byte}^{-1}}$), x tick label style={rotate=90}, %scaled x ticks = false,
-				ymin=0, ymax=0.8, ytick distance=0.1, yticklabels={,,}
-			]
-				\addplot[only marks, blue, mark=*, mark options={mark size=1.5pt}] table[x=1/size,y=S,col sep=comma] {vary-size.csv};
-				\addplot[mark=none, black, domain=0:25] {-0.00971522*x+0.7723259} node[right, align=left] at (2.5, 0.45) {$y=-0.00971522+0.772326$\\$r^2=0.991206$};
-			\end{axis}
-		\end{tikzpicture}
-	\end{subfigure}
-	\caption{Efficiency $S$ plotted against $a$ (left), $R_e$ (center) and $N$ (right). On all graphs, $S$ is determined for each point from the average run time $T$ of four repetitions}\label{fig:S_a_Re}
-\end{figure}
-
-As deduced from \ref{eq:Sfinal}, a \textit{stop-and-wait} protocol has its efficiency given by the expression
-\begin{equation*}
-	S = \frac{1-R_e}{1 + 2a}
-\end{equation*}
-When varying $C$ from $\SI{2400}{\bit/\second}$ to $\SI{115200}{\bit/\second}$, $S$ has average value and standard deviation $S=0.701459\pm0.006869$, thus $C$ does not influence $S$ as expected from \ref{eq:Sfinal}.
-The graphs in Figure \ref{fig:S_a_Re} (left, center) show $S$ depends inversely on $a$ and linearly on $R_e$, in agreement with the predictions.
-However, the linear dependence between $S$ and $1/\overline{L_p}$ reveals a detail that was not contemplated in \ref{eq:Sfinal}: the relation $L_f/\overline{L_p} = N$ means a decrease in $\overline{L_p}$ translates to an increase in $N$, and thus in the number of header bytes, which were not taken into consideration.
-
-To formally evaluate the validity of this expression, parameters $a$ and $R_e$ were simultaneously varied to obtain the data in the graph of Figure \ref{fig:S_aRe}. We found there is a linear relation $S=0.916512\,S_{pred} - 0.003564$ with very high correlation coefficient $r^2 = 0.999707$ between the theoretical and experimental efficiencies. The slope differs from $1$ by $8.35\%$ due in a lesser part to driver overhead, but mostly to not accounting for header bytes, as in these conditions header bytes account for $1-10968/11965=8.33\%$ of transferred bytes.
-
-\begin{figure}[H]
-	\centering
-	\begin{tikzpicture}
-		\footnotesize
-		\begin{axis}[
-			height=93mm,
-			grid=major,
-			grid style={dashed,black!50},
-			view={+110}{+30},
-			xmin=0, xmax=0.70, xtick distance=0.10, xlabel={Frame error rate $R_e$},
-			ymin=0, ymax=1.70, ylabel={$a=T_{prop}/T_f$},
-			zmin=0, zmax=0.70, ztick distance=0.10, zlabel={Efficiency $S$},
-		]
-			\addplot3[
-				surf,
-				mesh/rows=21,
-				opacity=1.00,
-				fill opacity=0.66
-			]
-			table[x=Re,y=a,z=S,col sep=comma] {vary-tau-fre-processed.csv};
-		\end{axis}
-	\end{tikzpicture}
-	\caption{Efficiency $S$ plotted against $R_e$ on the x-axis and $a$ on the y-axis. The value of $S$ in each point of the mesh is determined from the average $T$ of three repetitions}\label{fig:S_aRe}
-\end{figure}
-
-\section{Conclusion} \label{sec:Conclusion}
-
-This project aimed at implementing a reliable protocol, consisting of a data link layer and an application layer, to transfer a file between two computers connected through serial ports. The proposed \textit{stop-and-wait} protocol was successfully implemented in the C language, and tests were applied to evaluate its robustness to error and efficiency. This report was elaborated to convey the knowledge and methods used in this project.
-Thus, all objectives of this project were met.
-
-We had the opportunity to put into practice the theoretical concepts learned in RCOM curricular unit, as well as to discuss our learnings and deepen our knowledge from a practical point of view during the design, implementation and analysis phases of this project.
-
-\appendix
-\appendixpage
-\addappheadtotoc
-\chapter{Source code}
-
-The source code of this project can be obtained from \href{https://github.com/dmfrodrigues/feup-rcom-l1}{github.com/dmfrodrigues/feup-rcom-l1}. The source code is made available by \textcopyright~Diogo Rodrigues and Breno Pimentel under the \href{https://www.gnu.org/licenses/gpl-3.0.en.html}{GNU General Public License v3} (GPLv3), which you should have received together with the source code, or that you can otherwise obtain online.
-
-During project development and evaluation the repository remained private, although it can be shared with evaluators on request to clarify the development process or due to other justifiable reasons. It will be made public once all equivalent curricular unit projects have been evaluated in the present school year.
-
-\newgeometry{top=24mm,bottom=24mm,left=14mm,right=14mm}
-\fancyhfoffset{0pt}
-
-\section{Link Layer (LL)}
-\lstinputlisting[caption=\texttt{ll.h}, language=C]{../../include/ll.h}
-\lstinputlisting[caption=\texttt{ll.c}, language=C]{../../src/ll.c}
-
-\subsection{Internal code}
-\lstinputlisting[caption=\texttt{ll\_internal.h}, language=C]{../../include/ll_internal.h}
-\lstinputlisting[caption=\texttt{ll\_internal.c}, language=C]{../../src/ll_internal.c}
-
-\subsection{Utilities}
-\lstinputlisting[caption=\texttt{ll\_utils.h}, language=C]{../../include/ll_utils.h}
-\lstinputlisting[caption=\texttt{ll\_utils.c}, language=C]{../../src/ll_utils.c}
-
-\begin{landscape}
-\subsection{Flags}
-\lstinputlisting[frame=tb, numbersep=5pt, caption=\texttt{ll\_flags.h}, language=C]{../../include/ll_flags.h}
-\end{landscape}
-
-\subsection{S-frame state machine}
-\lstinputlisting[caption=\texttt{ll\_s\_statemachine.h}, language=C]{../../include/ll_s_statemachine.h}
-\lstinputlisting[caption=\texttt{ll\_s\_statemachine.c}, language=C]{../../src/ll_s_statemachine.c}
-
-\subsection{U-frame state machine}
-\lstinputlisting[caption=\texttt{ll\_u\_statemachine.h}, language=C]{../../include/ll_u_statemachine.h}
-\lstinputlisting[caption=\texttt{ll\_u\_statemachine.c}, language=C]{../../src/ll_u_statemachine.c}
-
-\subsection{I-frame state machine}
-\lstinputlisting[caption=\texttt{ll\_i\_statemachine.h}, language=C]{../../include/ll_i_statemachine.h}
-\lstinputlisting[caption=\texttt{ll\_i\_statemachine.c}, language=C]{../../src/ll_i_statemachine.c}
-
-\section{Application}
-\lstinputlisting[caption=\texttt{application\_layer.h}, language=C]{../../include/app.h}
-\lstinputlisting[caption=\texttt{application\_layer.c}, language=C]{../../src/app.c}
-
-\subsection{Argument parsing}
-\lstinputlisting[caption=\texttt{application\_layer.h}, language=C]{../../include/app_args.h}
-\lstinputlisting[caption=\texttt{application\_layer.c}, language=C]{../../src/app_args.c}
-
-\subsection{Executables}
-\lstinputlisting[caption=\texttt{transmitter.c}, language=C]{../../src/transmitter.c}
-\lstinputlisting[caption=\texttt{receiver.c}, language=C]{../../src/receiver.c}
-
-\section{Statistics}
-\subsection{Integrated part}
-\lstinputlisting[caption=\texttt{stats.h}, language=C]{../../include/stats.h}
-\lstinputlisting[caption=\texttt{stats.c}, language=C]{../../src/stats.c}
-
-\subsection{Separate part}
-\lstinputlisting[caption=\texttt{stats\_transmitter.c}, language=C]{../../stats/stats_transmitter.c}
-\lstinputlisting[caption=\texttt{stats\_receiver.c}   , language=C]{../../stats/stats_receiver.c}
-
-\begin{multicols}{2}
-\subsubsection{Input files}
-\lstinputlisting[basicstyle=\linespread{0.85}\ttfamily\tiny, frame=tbr, caption=\texttt{vary-tau.txt}]{../../stats/vary-tau.txt}
-\lstinputlisting[basicstyle=\linespread{0.85}\ttfamily\tiny, frame=tbr, caption=\texttt{vary-fre.txt}]{../../stats/vary-fre.txt}
-\lstinputlisting[basicstyle=\linespread{0.85}\ttfamily\tiny, frame=tbr, caption=\texttt{vary-tau-fre.txt}]{../../stats/vary-tau-fre.txt}
-\end{multicols}
-
-\restoregeometry
-
-\chapter{State machines} \label{ch:automatons}
-\section{U-frame state machine}
-
-A U-frame state machine must be ready to handle the following scenarios:
-\begin{itemize}
-	\item \textbf{Left:} A correct U-frame;
-	\item \textbf{Right:} A retransmitted S-frame (DISC), because if the receiver receives a DISC, but its own DISC is not received by transmitter, then the transmitter will retransmit the first DISC although the receiver was expecting a UA. Must send DISC.
-\end{itemize}
-
-\begin{center}
-	\begin{tikzpicture}[->,>=stealth',node distance=2.2cm,initial text=$ $,state/.style={circle, draw, minimum size=15mm}]
-		\scriptsize
-		\node[align=center, state, initial								] (START) 		{START};
-		\node[align=center, state, below of=START						] (FLAG_RCV) 	{FLAG\\RCV};
-		\node[align=center, state, below of=FLAG_RCV					] (A_RCV) 		{A\\RCV};
-		\node[align=center, state, below left of=A_RCV					] (C_RCV) 		{C\\RCV};
-		\node[align=center, state, below of=C_RCV						] (BCC_OK) 		{BCC\\OK};
-		\node[align=center, state, below of=BCC_OK, accepting			] (STOP) 		{STOP};
-
-		\node[align=center, state, below right of=A_RCV					] (C_DISC_RCV) 		{C\\DISC\\RCV};
-		\node[align=center, state, below of=C_DISC_RCV, accepting		] (STOP_DISC) 		{STOP\\DISC};
-
-		\draw	(START)			edge[right						]	node{FLAG}		(FLAG_RCV)
-				(FLAG_RCV)		edge[loop right					]	node{FLAG}		(FLAG_RCV)
-				(FLAG_RCV)		edge[right						]	node{A\_SEND}	(A_RCV)
-				(A_RCV)			edge[bend left, left			]	node{FLAG}		(FLAG_RCV)
-				(A_RCV)			edge[							]	node{C\_EXP}	(C_RCV)
-				(C_RCV)			edge[bend left=70, left			]	node{FLAG}		(FLAG_RCV)
-				(C_RCV)			edge[right						]	node{BCC}		(BCC_OK)
-				(BCC_OK)		edge[right						]	node{FLAG}		(STOP)
-
-				(A_RCV)			edge[							]	node{C\_DISC}	(C_DISC_RCV)
-				(C_DISC_RCV)	edge[align=center, loop right	]	node{$\Sigma$-\\FLAG}	(C_DISC_RCV)
-				(C_DISC_RCV)	edge[right						]	node{FLAG}		(STOP_DISC)
-				;
-		
-	\end{tikzpicture}
-\end{center}
-
-\newpage
-\section{S-frame state machine}
-
-A S-frame state machine must be ready to handle the following scenarios:
-\begin{itemize}
-	\item \textbf{Left:} A correct S-frame;
-	\item \textbf{Right:} A retransmitted I-frame, in case it is expecting DISC but the transmitter was not properly acknowledged that the last I-frame was transmitted. Must send RR.
-\end{itemize}
-
-\begin{center}
-	\begin{tikzpicture}[->,>=stealth',node distance=2.2cm,initial text=$ $,state/.style={circle, draw, minimum size=15mm}]
-		\scriptsize
-		\node[align=center, state, initial								] (START) 		{START};
-		\node[align=center, state, below of=START						] (FLAG_RCV) 	{FLAG\\RCV};
-		\node[align=center, state, below of=FLAG_RCV					] (A_RCV) 		{A\\RCV};
-		\node[align=center, state, below left of=A_RCV					] (C_RCV) 		{C\\RCV};
-		\node[align=center, state, below of=C_RCV						] (BCC_OK) 		{BCC\\OK};
-		\node[align=center, state, below of=BCC_OK, accepting			] (STOP) 		{STOP};
-
-		\node[align=center, state, below right of=A_RCV					] (C_I_RCV) 		{C\\I\\RCV};
-		\node[align=center, state, below of=C_I_RCV, accepting			] (STOP_RR) 		{STOP\\RR};
-
-		\draw	(START)			edge[right						]	node{FLAG}		(FLAG_RCV)
-				(FLAG_RCV)		edge[loop right					]	node{FLAG}		(FLAG_RCV)
-				(FLAG_RCV)		edge[right						]	node{A\_SEND}	(A_RCV)
-				(A_RCV)			edge[bend left, left			]	node{FLAG}		(FLAG_RCV)
-				(A_RCV)			edge[							]	node{C\_EXP}	(C_RCV)
-				(C_RCV)			edge[bend left=70, left			]	node{FLAG}		(FLAG_RCV)
-				(C_RCV)			edge[right						]	node{BCC}		(BCC_OK)
-				(BCC_OK)		edge[right						]	node{FLAG}		(STOP)
-
-				(A_RCV)			edge[							]	node{C\_I}		(C_I_RCV)
-				(C_I_RCV)		edge[align=center, loop right	]	node{$\Sigma$-\\FLAG}	(C_I_RCV)
-				(C_I_RCV)		edge[right						]	node{FLAG}		(STOP_RR)
-				;
-		
-	\end{tikzpicture}
-\end{center}
-
-\newpage
-\section{I-frame state machine}
-
-An I-frame state machine must be ready to handle to following scenarios:
-\begin{itemize}
-	\item \textbf{Left:} A correct I-frame;
-	\item \textbf{Center:} A retransmitted wrong I-frame. Must ignore the data and respond with RR;
-	\item \textbf{Right:} A retransmitted S-frame (SET), as it may be expecting an I-frame but might get a retransmission of a SET from establishment. Must respond with UA.
-\end{itemize}
-
-\begin{center}
-	\begin{tikzpicture}[->,>=stealth',node distance=2.2cm,initial text=$ $,state/.style={circle, draw, minimum size=15mm}]
-		\scriptsize
-		\node[align=center, state, initial          					] (FLAG_RCV) 	{START};
-		\node[align=center, state, below of=FLAG_RCV					] (A_RCV) 		{A\\RCV};
-		\node[align=center, state, below of=A_RCV						] (C_UNXP_RCV)	{C\\UNXP\\RCV};
-		\node[align=center, state, left=1.2cm of C_UNXP_RCV				] (C_RCV) 		{C\\RCV};
-		\node[align=center, state, below of=C_RCV						] (D) 			{D};
-		\node[align=center, state, below of=D, accepting				] (STOP) 		{STOP};
-
-		
-		\node[align=center, state, below of=C_UNXP_RCV, accepting		] (STOP_RR) 	{STOP\\RR};
-		\node[align=center, state, right=1.2cm of C_UNXP_RCV			] (C_SET_RCV) 	{C\\SET\\RCV};
-		\node[align=center, state, below of=C_SET_RCV, accepting		] (STOP_UA) 	{STOP\\UA};
-
-		\draw	(FLAG_RCV)		edge[loop right				]	node{FLAG}					(FLAG_RCV)
-				(FLAG_RCV)		edge[right					]	node{A\_SEND}				(A_RCV)
-				(A_RCV)			edge[bend left, left		]	node{FLAG}					(FLAG_RCV)
-				(A_RCV)			edge[left					]	node{C\_EXP}				(C_RCV)
-				(C_RCV)			edge[bend left, left		]	node{FLAG}					(FLAG_RCV)
-				(C_RCV)			edge[left					]	node{BCC1}					(D)
-				(D)				edge[align=center, loop left, looseness=2	]	node{$\Sigma-$\\FLAG}	(D)
-				(D)				edge[right					]	node{FLAG}					(STOP)
-
-				(A_RCV)			edge[						]	node{C\_UNXP}	(C_UNXP_RCV)
-				(C_UNXP_RCV)	edge[align=center, loop right, looseness=2]	node{$\Sigma-$\\FLAG}	(C_UNXP_RCV)
-				(C_UNXP_RCV)	edge[left					]	node{FLAG}		(STOP_RR)
-
-				(A_RCV)			edge[right					]	node{C\_SET}	(C_SET_RCV)
-				(C_SET_RCV)		edge[align=center, loop right, looseness=2]	node{$\Sigma-$\\FLAG}	(C_SET_RCV)
-				(C_SET_RCV)		edge[left					]	node{FLAG}		(STOP_UA)
-				;
-		
-	\end{tikzpicture}
-\end{center}
-
-\chapter{App arguments} \label{ch:args}
-
-The transmitter and receiver can be used in the following ways (also available in \texttt{README.md}):
-\begin{lstlisting}[numbers=none, frame=]
-transmitter COM FILE <-b baudrate> <-d pd> <-h ph> <-r retransmissions>
-	<-s size> <-t timeout> <-T tau> <-v verbosity>
-
-receiver    COM      <-b baudrate> <-d pd> <-h ph> <-r retransmissions>
-	<-s size> <-t timeout> <-T tau> <-v verbosity>
-
-COM                     Communications channel to use
-						(COM1 - ttyS0, COM2 - ttyS1, ...)
-FILE                    Path to file to be transferred by the transmitter
-
--b, --baudrate          Baud rate; bit per second (default is 38400)
--d, --prob-error-data   Data error probability
--h, --prob-error-head   Header error probability
--r, --retransmissions   Retransmissions (default is 3)
--s, --size              Packet size (# of data bytes in a packet), in bytes
-						(default is APP_MAX_SIZE, which is 4092)
--t, --timeout           Timeout, in seconds (default is 3)
--T, --tau               Tau; extra time before analyzing, in microseconds
-						(default is 0)
--v, --verbosity         Verbosity of debug mode (0 to 4):
-							0 - Only errors
-							1 - Global LL workings
-							2 - Specific LL workings (received frames, ...)
-							3 - Everything, including written and read bytes
-\end{lstlisting}
-
-\chapter{Statistics} \label{ch:statistics}
-
-In the following table, the rightmost column stands for how one obtains the parameter: defined by the user (I), measured (O) or derived from I/O parameters (D).
-
-\begin{center}
-	\small
-	\begin{tabular}{c | l | p{80mm} | c}
-		\hline \hline
-		\textbf{Symbol} & \textbf{Name}               & \textbf{Definition}                                                                & I/O \\ \hline
-		$S$              & Efficiency                  & Ratio of actual transfer rate to capacity                                          & D   \\
-		$a$              & Norm. prop. time            & $a = T_{prop}/T_f$                                                                 & D   \\
-		$T_{prop}$       & Propagation time            & Time for a signal to propagate through the cable; $T_{prop} = \tau_0 + \Delta\tau$ & D   \\
-		$T_f$            & Frame time                  & Time to transfer a frame                                                           & D   \\
-		$T_t$            & Timeout time                & Time to wait for answer                                                            & D   \\
-		$T$              & Total execution time        & Total execution time of the transmitter                                            & O   \\
-		$\Delta\tau$     & Added propagation time      & Additional propagation time                                                        & I   \\
-		$L$              & Total messages length       & Total message length, including retransmissions                                    & O   \\
-		$L_i$            & Length of frame $i$         & Length of frame $i$, excluding headers                                             & O   \\
-		$\overline{L_p}$ & Average length of packet    & Average length of packet, without headers                                          & O   \\
-		$L_f$            & File length                 & Message length excluding retransmissions                                           & I   \\
-		$N$				 & \# of frames                & Number of actually transferred frames                                              & O   \\
-		$N_e$            & \# of frames with errors    & Frames with errors, inc. during establishment                                      & O   \\
-		$N_t$            & \# of frames with timeout   & Frames with timeout, inc. during establishment                                     & O   \\
-		$N_{min}$        & Minimum \# of frames        & Minimum number of frames required to transfer message; $N_{min} = N-N_t-N_e$       & D   \\
-		$p_d$            & Data bit swap probability   & Probability of a bit in a data byte to swap                                        & D   \\
-		$p_h$            & Header bit swap probability & Probability of a bit in a header byte to swap                                      & D   \\
-		$R_e$            & Frame error rate            & Frames with errors per total frame number                                          & D   \\
-		$p_e$            & Frame error probability     & Estimated from $R_e$                                                               & I   \\
-		$A$              & Number of attempts          & $\expected{A} = 1/(1-p_e)$                                                         & D   \\
-		$C$              & Capacity                    & Capacity of the system (baud rate)                                                 & I   \\
-		$R$              & Data rate                   & Global data transfer rate                                                          & D   \\
-		\hline \hline
-	\end{tabular}
-\end{center}
-
-\section{Normalized propagation time}
-
-\begin{equation} \label{eq:T}
-\begin{alignedat}{2}
-	T & = \sum_{i=1}^{N-N_t}{(2T_{prop}^i + T_f^i)} && + \sum_{i=1}^{N_t}{T_t} \\
-	  & = 2 (N-N_t) \overline{T_{prop}} + \sum_{i=1}^{N}{T_f^i} && + N_t T_t
-\end{alignedat}
-\end{equation}
-
-Because $T_f = L/R$,
-\begin{equation} \label{eq:Tfsum}
-	\sum_{i=1}^{N-N_t}{T_f^i} = \sum_{i=1}^{N-N_t}{\frac{L_i}{C}} = \frac{1}{C} \sum_{i=1}^{N-N_t}{L_i} = \frac{L}{C}
-\end{equation}
-equation \ref{eq:T} becomes
-\begin{alignat}{2} \label{eq:T2}
-	T & = 2 (N-N_t) \overline{T_{prop}} + \frac{L}{C} + N_t T_t \\
-	\iff \overline{T_{prop}} & = \frac{T - L/C - N_t T_t}{2 (N-N_t)}
-\end{alignat}
-We can thus determine $\overline{T_{prop}}$, because we can vary $L$, $C$ and $N$, and measure $T$.
-
-As per equation \ref{eq:Tfsum}, the average frame time $\overline{T_f}$ is 
-\begin{equation} \label{eq:Tfmean}
-	\overline{T_f} = \frac{1}{N-N_t}\sum_{i=1}^{N-N_t}{T_f^i} = \frac{L}{(N-N_t) C}
-\end{equation}
-We can thus determine $a$ from
+\noindent Displayed equations are centered and set on a separate
+line.
 \begin{equation}
-\begin{alignedat}{2}
-	a
-	& = \frac{\overline{T_{prop}}}{\overline{T_f}} \\
-	& = \frac{\frac{T - L/C - N_t T_t}{2 (N-N_t)}}{\frac{L}{(N-N_t) C}} \\
-	& = \frac{C(T - N_t T_t)}{2 L} - \frac{1}{2}
-\end{alignedat}
+x + y = z
 \end{equation}
+Please try to avoid rasterized images for line-art diagrams and
+schemas. Whenever possible, use vector graphics instead (see
+Fig.~\ref{fig1}).
 
-\section{Frame error rate}
+\begin{figure}
+% \includegraphics[width=\textwidth]{fig1.eps}
+\caption{A figure caption is always placed below the illustration.
+Please note that short captions are centered, while long ones are
+justified by the macro package automatically.} \label{fig1}
+\end{figure}
 
-\begin{equation} \label{eq:Re}
-	R_e = \frac{N_e}{N - N_t}
-\end{equation}
+\begin{theorem}
+This is a sample theorem. The run-in heading is set in bold, while
+the following text appears in italics. Definitions, lemmas,
+propositions, and corollaries are styled the same way.
+\end{theorem}
+%
+% the environments 'definition', 'lemma', 'proposition', 'corollary',
+% 'remark', and 'example' are defined in the LLNCS documentclass as well.
+%
+\begin{proof}
+Proofs, examples, and remarks have the initial word in italics,
+while the following text appears in normal font.
+\end{proof}
+For citations of references, we prefer the use of square brackets
+and consecutive numbers. Citations using labels or the author/year
+convention are also acceptable. The following bibliography provides
+a sample reference list with entries for journal
+articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
+book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
+and a homepage~\cite{ref_url1}. Multiple citations are grouped
+\cite{ref_article1,ref_lncs1,ref_book1},
+\cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
 
-\section{Efficiency}
+%
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
 
-\subsection{Calculation}
-
-We can determine the efficiency $S$ by using 
-\begin{equation} \label{eq:S}
-	S = \frac{R}{C}
-\end{equation}
-where $R$ is the data transfer rate,
-\begin{equation} \label{eq:R}
-	R = \frac{L_f}{T}
-\end{equation}
-thus equation \ref{eq:S} becomes
-\begin{equation} \label{eq:S2}
-	S = \frac{L_f}{T C}
-\end{equation}
-and as such we can determine $S$ by varying $L$ and $C$ and measure $T$.
-
-\subsection{Expected relations}
-
-From \ref{eq:Re},
-\begin{equation}
-	1-R_e = \frac{N - N_t - N_e}{N-N_t} = \frac{N_{min}}{N-N_t}
-\end{equation}
-
-We also know $\expected{A} = 1/(1-p_e)$, and that $p_e$ can be estimated from $R_e$, thus
-\begin{alignat}{2}
-	\expected{A} &= \frac{1}{1-p_e} = \frac{1}{1-R_e} \iff \\
-	1 &= (1-R_e)\expected{A} = \frac{N_{min}}{N-N_t}\expected{A}
-\end{alignat}
-
-From \ref{eq:T2},
-\begin{equation}
-	\begin{alignedat}{5}
-		T
-		& = (N-N_t)                       &&              && (\overline{T_f} + 2\overline{T_{prop}}) + N_t T_t \\
-		& = (N-N_t) \frac{N_{min}}{N-N_t} && \expected{A} && (\overline{T_f} + 2\overline{T_{prop}}) + N_t T_t \\
-		& = N_{min}                       && \expected{A} && (\overline{T_f} + 2\overline{T_{prop}}) + N_t T_t
-	\end{alignedat}
-\end{equation}
-where $N-N_t-N_e$ is a constant, representing the minimum amount of frames that were required to transfer the message.
-
-Thus, we have
-\begin{equation} \label{eq:S_rel}
-\begin{alignedat}{2}
-	S
-	&= \frac{N_{min}\overline{T_f}}{T} \\
-	&= \frac{N_{min}\overline{T_f}}{N_{min} \expected{A}(\overline{T_f} + 2\overline{T_{prop}}) + N_t T_t} \\
-	&= \frac{\overline{T_f}}{\expected{A}(\overline{T_f} + 2a\overline{T_f}) + N_t T_t} \\
-	&= \frac{1}{\expected{A}(1 + 2a) + N_t T_t / \overline{T_f}} \\
-	&= \frac{1}{\frac{1}{1-R_e}(1 + 2a) + N_t T_t / \overline{T_f}} \\
-	&= \frac{1-R_e}{(1 + 2a) + (1-R_e) N_t T_t / \overline{T_f}} \\
-	&= \frac{1-R_e}{1 + 2a} + \frac{(1-R_e)^2 N_t T_t}{(1 + 2a)\overline{T_f} + (1-R_e) N_t T_t}
-\end{alignedat}
-\end{equation}
-
-There are two occasions under which a timeout can occur:
-\begin{itemize}
-	\itemsep0em
-	\item No program is listening on the receiving end or the receiver does not acknowledge the FLAG on the beginning or end of a frame due to communication media error; 
-	\item The receiver sends an acknowledgement, but it does not arrive or arrives with errors.
-\end{itemize}
-The first is not possible, because the communication media is always connected and there is always a receiver, and random errors are not being generated on the FLAG, but rather on the data and the other header bytes. The second is not possible either, since errors are only being generated in data and headers of I-frames (and it is reasonable to assume there are almost no errors in other frames, as they are considerably smaller than I-frames). Thus, we can consider timeouts do not occur when evaluating the performance of this protocol ($N_t=0$), and as such equation \ref{eq:S_rel} becomes
-\begin{equation} \label{eq:Sfinal}
-	S = \frac{1-R_e}{1 + 2a}
-\end{equation}
+\bibliographystyle{llncs2e/splncs04}
+\bibliography{report}
 
 \end{document}
