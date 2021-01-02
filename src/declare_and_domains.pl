@@ -19,8 +19,9 @@ declare_and_domains(Classes, [student(ID, _Grade, S, _O)|Students], [solution(ID
 domains(_, [], []) :- !.
 domains(Classes, [Subject|StudentSubjects], [AssignedClass|AssignedClasses]) :-
     !,
-    subject_has_N_classes(Classes, Subject, L),
-    domain([AssignedClass], 1, L),
+    subject_classes(Classes, Subject, List),
+    max_list(List, Max), min_list(List, Min),
+    domain([AssignedClass], Min, Max),
     domains(Classes, StudentSubjects, AssignedClasses).
 
 % subject_has_N_classes(+Classes, +Subject, -N)
