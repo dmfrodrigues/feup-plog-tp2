@@ -59,7 +59,19 @@ Consider an educational institution which lectures $|S|$ subjects numbered $s=1,
 
 That institution has a set of students with ID $i$, and for each student it is known his average grade from past school years $0 \leq g^i \leq 20$, the subjects he is enrolled in subjects sequence $S^i = \langle S^i_1, S^i_2, ..., S^i_{|S^i|} \rangle$, $S^i_k \in S$ and his chosen schedule options $O^i = \{o^i_1, o^i_2, ..., o^i_{|S^i|}\}$ where $3 \geq N_i \geq 6$ is the number of schedule options the student chose, and $o^i_j$ is the $j$-th option of student $i$, where an option is $o^i_j = \langle c^i_{j, 1}, c^i_{j, 2}, ..., {c^i_{j, |S_i|}} \rangle$, where $c^i_{j,k}$ is the class student $i$ selected for his/her $j$-th option and subject $S^i_k$.
 
+$O^i = \langle o^i_1, o^i_2, ..., o^i_{|S^i|} \rangle$ can otherwise be a sequence of options, where student $i$'s preferred option is $o^i_1$ and his/her least preferred option is $o^i_ {|S^i|}$.
+
 The solution is, for each student $i$, an empty schedule $a^i=\langle \rangle$ if he/she was not allocated, or the allocated schedule $a^i = \langle a^i_1, a^i_2, ..., a^i_{|S_i|} \rangle$ if he was allocated.
+
+The restrictions are as follows:
+\begin{enumerate}
+    \item Students must be placed in decreasing order of their grades.
+    \item A student must be either allocated to a schedule (may it be one of his/her options or not), or not allocated to any of his/her subjects.
+    \item (\textit{Optional}) A student does not have overlapping classes of different subjects.
+    \item The number of students per class in a subject must be close to the average number of students per class in that subject.
+    \item The ratio of odd-numbered students to even-numbered students in the classes of a subject should be balanced (i.e., close to 1, or close to the odd-even ratio for that subject).
+    \item (\textit{Optional}) Students should be allocated preferrably to their first options when possible.
+\end{enumerate}
 
 \section{Approach}
 
