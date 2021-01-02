@@ -4,6 +4,9 @@
 :-
     use_module(library(clpfd)).
 
+:-
+    use_module(library(lists)).
+
 % declare_and_domains(Classes, Students, Solution)
 % declare Solution and set the domain of those variables.
 declare_and_domains(_, [], []) :- !.
@@ -20,13 +23,13 @@ domains(_, [], []) :- !.
 domains(Classes, [Subject|StudentSubjects], [AssignedClass|AssignedClasses]) :-
     !,
     subject_classes(Classes, Subject, List),
-    max_list(List, Max), min_list(List, Min),
+    max_member(Max, List),
+    min_member(Min, List),
     domain([AssignedClass], Min, Max),
     domains(Classes, StudentSubjects, AssignedClasses).
 
 % subject_has_N_classes(+Classes, +Subject, -N)
 % Given the list of all classes Classes,
 % subject Subject has N classes.
-subject_has_N_classes(Classes, Subject, N) :-
-    setof(Class, member(class(Subject, Class, _), Classes), SubjectClasses),
-    length(SubjectClasses, N).
+subject_classes(Classes, Subject, N) :-
+    setof(Class, member(class(Subject, Class, _), Classes), N).
