@@ -94,7 +94,6 @@ For each student and for each subject that student is enrolled, his class is out
 
 \subsubsection{Hard constraints}
 \begin{enumerate}
-    \item Students are placed in decreasing order of their grades.
     \item A student is either completely allocated to one of his/her chosen schedules, or not allocated at all (\textit{optional}: a student can be allocated another schedule different from any of the student's choices).
     \item (\textit{Optional}) A student does not have overlapping classes in his/her allocated schedule.
     \item The number of students in a class does not exceed the maximum capacity.
@@ -102,6 +101,7 @@ For each student and for each subject that student is enrolled, his class is out
 
 \subsubsection{Soft constraints}
 \begin{enumerate}
+    \item Students are placed in decreasing order of their grades (i.e., the penalty for not placing a student in one of his options, or placing him/her in the most preferred option, is greater if his grade is larger).
     \item The number of students per class in a given subject is balanced.
     \item The number of students of even and odd number in a given class-subject is balanced.
     \item (\textit{Optional}) Students should be allocated to their preferred schedules by order, where the first schedule option is the student's preferred and the last one the least preferred.
