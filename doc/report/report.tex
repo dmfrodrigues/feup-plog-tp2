@@ -11,6 +11,8 @@
 % to display URLs in blue roman font according to Springer's eBook style:
 % \renewcommand\UrlFont{\color{blue}\rmfamily}
 
+\usepackage[binary-units=true]{siunitx} %SI units
+
 \begin{document}
 \title{TuCoTuTeCo}
 \subtitle{Allocating students to classes during COVID-19}
@@ -43,13 +45,22 @@ Another keyword.}
 
 \section{Introduction}
 
-Student--class allocation is a routine problem for educational institutions, and is usually solved as a constrainted resource allocation problem where classes are the resources, the agents are the students and subject to constraints such as a student not having overlapping classes and balancing class sizes. However, as a result of the COVID-19 pandemic, further constraints must be applied to increase physical distancing and reduce the number of contacts, such as more strongly enforcing class balancing, and also balancing the number of students with even and odd ID number in a class so students with even and odd IDs can have presential classes in alternating weeks.
+Student--class allocation is a routine problem for educational institutions, and is usually solved as a constrainted resource allocation problem where classes are the resources, the agents are the students and subject to constraints such as a student not having overlapping classes of different subjects and balancing class sizes. However, as a result of the COVID-19 pandemic, further constraints must be applied to increase physical distancing and reduce the number of contacts, such as more strongly enforcing class balancing, and also balancing the number of students with even and odd ID number in a class so students with even and odd IDs can have presential classes in alternating weeks.
 
 We will thus model this problem as a constraint optimization problem (COP) with a set of soft and hard constraints, and provide it with a value function that should be optimized. We encoded the problem as a Prolog program using SICStus Prolog and the constraint logic programming (CLP) module \texttt{clpfd} (\textit{CLP over Finite Domains}), with an interface to solve an instance of the problem. We then generate a set of different scenarios with varying dimensions to analyse the time complexity of the solution. Finally we present the results of our experiments.
 
 \section{Problem description}
 
 \section{Approach}
+
+Our priority will be to take a logic programming approach right from the start, and only when concepts become more complex will we use more mathematical notations.
+
+\subsection{Data}
+
+The input data is made of:
+\begin{enumerate}
+    \item Facts using the predicate \texttt{schedule(Subject, Class, Time)}, which means class \texttt{Class} of subject \texttt{Subject} is attending a class at time \texttt{Time}. To simplify without loss of generality, subjects are numbered sequentially starting in 1, classes of a subject are numbered sequentially starting in 1, and time is an integer representing a time slot (for instance, time can be divided into $\SI{30}{\minute}$ slots where the first slot is on Monday from 00:00 to 00:30). This representation of time is merely a convenient way to understand time, as the only thing that matters is the boolean relation that states if two subject-class pairs overlap.
+\end{enumerate}
 
 \subsection{Decision variables}
 
