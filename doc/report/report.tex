@@ -51,6 +51,8 @@ We will thus model this problem as a constraint optimization problem (COP) with 
 
 \section{Problem description}
 
+
+
 \section{Approach}
 
 Our priority will be to take a logic programming approach right from the start, and only when concepts become more complex will we use more mathematical notations.
@@ -64,9 +66,27 @@ The input data is made of:
     \item Facts using the predicate \texttt{grade(ID, Grade)}, which means student with ID \texttt{ID} has average grade \texttt{Grade}.
 \end{enumerate}
 
+For each ID in \texttt{student}, there should be a fact \texttt{grade} reporting the grade of that student.
+
 \subsection{Decision variables}
 
+For each student and for each subject that student is enrolled, his class is outputted. The domain of the class is the set of classes a subject has as stated in facts using predicate \texttt{schedule}.
+
 \subsection{Constraints}
+
+\subsubsection{Hard constraints}
+\begin{enumerate}
+    \item Students are placed in decreasing order of their grades.
+    \item A student is either completely allocated to one of his/her chosen schedules, or is allocated another schedule different from any of the student's choices.
+    \item (\textit{Optional}) A student does not have overlapping classes in his/her allocated schedule.
+\end{enumerate}
+
+\subsubsection{Soft constraints}
+\begin{enumerate}
+    \item The number of students per class in a given subject is balanced.
+    \item The number of students of even and odd number in a given class-subject is balanced.
+    \item (\textit{Optional}) Students should be allocated to their preferred schedules by order, where the first schedule option is the student's preferred and the last one the least preferred.
+\end{enumerate}
 
 \subsection{Evaluation function}
 
