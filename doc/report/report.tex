@@ -60,6 +60,8 @@ Our priority will be to take a logic programming approach right from the start, 
 The input data is made of:
 \begin{enumerate}
     \item Facts using the predicate \texttt{schedule(Subject, Class, Time)}, which means class \texttt{Class} of subject \texttt{Subject} is attending a class at time \texttt{Time}. To simplify without loss of generality, subjects are numbered sequentially starting in 1, classes of a subject are numbered sequentially starting in 1, and time is an integer representing a time slot (for instance, time can be divided into $\SI{30}{\minute}$ slots where the first slot is on Monday from 00:00 to 00:30). This representation of time is merely a convenient way to understand time, as the only thing that matters is the boolean relation that states if two subject-class pairs overlap.
+    \item Facts using the predicate \texttt{student(ID, Order, Subject, Class)}, which means student with ID \texttt{ID} has chosen class \texttt{Class} of subject \texttt{Subject} as its \texttt{Order}-th choice. \texttt{Order} is numbered sequentially and each student must have between 3 and 6 schedule options (inclusive).
+    \item Facts using the predicate \texttt{grade(ID, Grade)}, which means student with ID \texttt{ID} has average grade \texttt{Grade}.
 \end{enumerate}
 
 \subsection{Decision variables}
