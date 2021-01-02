@@ -25,7 +25,7 @@ restrict_students_options(
 % or not allocated at all.
 % A student is completely allocated to one of his/her chosen schedules:
 restrict_student_options(
-    student(ID, _Grade, _Subjects, [Option|Options]),
+    student(ID, _Grade, _Subjects, [Option|_Options]),
     solution(ID, Allocation)
 ) :-
     restrict_equal_arrays(Allocation, Option).

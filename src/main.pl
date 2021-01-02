@@ -50,8 +50,8 @@ get_vars([solution(_, Vars1)|Solution], Vars) :-
         class(2, 3, [])
     ],
     Students = [
-        student(201806429, 18, [1,2], [[1, 2], [2, 3], [1, 3]]),
-        student(201800170, 18, [1,2], [[2, 1], [3, 2], [3, 1]])
+        student(201800170, 17, [1,2], [[2, 1], [3, 2], [3, 1]]),
+        student(201806429, 18, [1,2], [[1, 2], [2, 3], [1, 3]])
     ],
     solve(Classes, Students, Solution),
     write(Solution).
