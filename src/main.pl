@@ -35,7 +35,7 @@ solve(Classes, Students, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
     restrict(Classes, Students, Solution),
     get_vars(Solution, Vars),
-    evaluate(Solution, Value),
+    evaluate(Classes, Students, Solution, Value),
     minimize(labeling([best], Vars), Value),
     write(Value), nl,
     true.
