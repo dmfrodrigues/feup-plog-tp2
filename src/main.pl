@@ -91,12 +91,12 @@ avg_class_size_in_subject(Classes, Subject, Solution, Average):-
 
 evaluate_classes(_AllClasses, [], _Solution, 0) :- format("L92~n", []).
 evaluate_classes(AllClasses, [Class|T], Solution, Value):-  format("L93~n", []),
-    Class = class(Subject, ID, _),
-    number_of_odd_in_class(ID, Solution, Odds),
-    number_of_even_in_class(ID, Solution, Evens),
-    class_size(Class, Solution, ClassSize),
-    avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
-    Y is ClassSize/Average,
+    Class = class(Subject, ID, _),                          format("L94~n", []),
+    number_of_odd_in_class(ID, Solution, Odds),             format("L95~n", []),
+    number_of_even_in_class(ID, Solution, Evens),           format("L96~n", []),
+    class_size(Class, Solution, ClassSize),                 format("L97~n", []),
+    avg_class_size_in_subject(AllClasses, Subject, Solution, Average),  format("L98~n", []),
+    Y is ClassSize/Average,                                 format("L99~n", []),
 
     NValue1 is 0.1*(Odds-Evens)**2 + 0.25*(1-Y)**2,         format("L101~n", []),
 
@@ -128,10 +128,6 @@ evaluate_allocation([Student|T], Solution, Value):-
     .
 
 evaluate(Classes, Students, Solution, Value):-          format("L131~n", []),
-    write(Classes ), nl,
-    write(Students), nl,
-    write(Solution), nl,
-    write(Value   ), nl,
     evaluate_classes(Classes, Classes, Solution, C),    format("L132~n", []),
     % evaluate_allocation(Students, Solution, S),
     Value is C
