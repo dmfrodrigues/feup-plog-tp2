@@ -24,8 +24,10 @@
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{Diogo Miguel Ferreira Rodrigues (\email{diogo.rodrigues@fe.up.pt})\inst{1},\\
-Breno Accioly de Barros Pimentel (\email{up201800170@fe.up.pt})\inst{1}}
+\author{
+Diogo Miguel Ferreira Rodrigues (\email{diogo.rodrigues@fe.up.pt}),\\
+Breno Accioly de Barros Pimentel (\email{up201800170@fe.up.pt})
+}
 
 \authorrunning{D. Rodrigues and B. Pimentel}
 
@@ -37,13 +39,14 @@ PLOG -- Class 3MIEIC02, Group TuCoTuTeCo\_4
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-The abstract should briefly summarize the contents of the paper in
-150--250 words.
+Due to the pandemic situation caused by COVID-19, educational institutions are forced to adopt new methods to allocate students to classes on subjects they are enrolled. This is reflected in the additional set of restrictions enforced by health authorities about room area and capacity for instance. In this paper we present a practical approach to solving instances of the student-class allocation with additional constraints by implementing and analysing a solution using the Prolog programming language to approach this problem as a generic constraint optimization problem (COP).
 
 \keywords{
-First keyword \and
-Second keyword \and
-Another keyword.}
+COP \and
+CLP \and
+Optimization \and
+Student-class problem \and
+Prolog}
 \end{abstract}
 
 \section{Introduction}
@@ -52,15 +55,15 @@ Student--class allocation is a routine problem for educational institutions, and
 However, as a result of the COVID-19 pandemic, further constraints must be applied to increase physical distancing and reduce the number of contacts, such as more strongly enforcing class balancing, and also balancing the number of students with even and odd ID number in a class so students with even and odd IDs can have presential classes in alternating weeks.
 
 We will thus model this problem as a constraint optimization problem (COP) with a set of soft and hard constraints, and provide it with a value function that should be optimized.
-We encoded the problem as a Prolog program using SICStus Prolog and the constraint logic programming (CLP) module \texttt{clpfd} (\textit{CLP over Finite Domains}), with an interface to solve an instance of the problem.
+We encoded the problem as a Prolog program using SICStus Prolog \cite{sicstus} and the constraint logic programming (CLP) module \texttt{clpfd} (\textit{CLP over Finite Domains}), with an interface to solve an instance of the problem.
 We then generate a set of different scenarios with varying dimensions to analyse the time complexity of the solution.
 Finally we present the results of our experiments.
 
 \section{Problem description}
 
-Consider an educational institution which lectures $|S|$ subjects numbered $s=1, 2, ... , |S|$ ($S = \{1, 2, ..., |S|\}$ is the set of subjects), where subject $s$ has $|C^s|$ classes in the set of its classes $C^s$ (the number of each class among all classes of all subjects is unique).
+Consider an educational institution which lectures $|S|$ subjects numbered $s=1, 2, ... , |S|$ ($S = \{1, 2, ..., |S|\}$ is the set of subjects), where subject $s$ has $|C^s|$ classes in the set of its classes $C^s$ (the number of each class among all classes of all subjects is unique; $C$ is the set of all classes).
 
-That institution has a set of students with ID $i$, and for each student it is known his average grade from past school years $0 \leq g^i \leq 20$, the subjects he is enrolled in subjects sequence $S^i = \langle S^i_1, S^i_2, ..., S^i_{|S^i|} \rangle$, $S^i_k \in S$ and his chosen schedule options $O^i = \{o^i_1, o^i_2, ..., o^i_{|S^i|}\}$ where $3 \geq N_i \geq 6$ is the number of schedule options the student chose, and $o^i_j$ is the $j$-th option of student $i$, where an option is $o^i_j = \langle c^i_{j, 1}, c^i_{j, 2}, ..., {c^i_{j, |S_i|}} \rangle$, where $c^i_{j,k}$ is the class student $i$ selected for his/her $j$-th option and subject $S^i_k$.
+That institution has a set $St$ of students with ID $i$, and for each student it is known his average grade from past school years $0 \leq g^i \leq 20$, the subjects he is enrolled in subjects sequence $S^i = \langle S^i_1, S^i_2, ..., S^i_{|S^i|} \rangle$, $S^i_k \in S$ and his chosen schedule options $O^i = \{o^i_1, o^i_2, ..., o^i_{|S^i|}\}$ where $3 \geq N_i \geq 6$ is the number of schedule options the student chose, and $o^i_j$ is the $j$-th option of student $i$, where an option is $o^i_j = \langle c^i_{j, 1}, c^i_{j, 2}, ..., {c^i_{j, |S_i|}} \rangle$, where $c^i_{j,k}$ is the class student $i$ selected for his/her $j$-th option and subject $S^i_k$.
 
 $O^i = \langle o^i_1, o^i_2, ..., o^i_{|S^i|} \rangle$ can otherwise be a sequence of options, where student $i$'s preferred option is $o^i_1$ and his/her least preferred option is $o^i_ {|S^i|}$.
 
@@ -82,9 +85,9 @@ The restrictions are as follows:
 
 The input data is made of:
 \begin{enumerate}
-    \item Facts using the predicate \texttt{schedule(Subject, Class, Time)}, which means class \texttt{Class} of subject \texttt{Subject} is attending a lecture at time \texttt{Time}. To simplify without loss of generality, subjects are numbered sequentially starting in 1, classes of a subject are numbered sequentially starting in 1, and time is an integer representing a time slot (for instance, time can be divided into $\SI{30}{\minute}$ slots where the first slot is on Monday from 00:00 to 00:30). This representation of time is merely a convenient way to understand time, as the only thing that matters is the boolean relation that states if two subject-class pairs overlap.
-    \item Facts using the predicate \texttt{student(ID, Grade, Subjects, Options)}, which means student with ID \texttt{ID} has average grade \texttt{Grade} is enrolled in the subjects \texttt{Subjects} which is a list, and has chosen the options  \texttt{Options} which is a list of 3 to 6 schedule options, with each element being a list of the same size as \texttt{Subjects} containing the classes chosen for the respective option.
-    \item Fact using the predicate \texttt{capacity(Capacity)}, which \texttt{Capacity} means the maximum students attending to a class simultaneously.
+    \item An array of structures \texttt{class(Subject, Class, Time)}, which means class \texttt{Class} of subject \texttt{Subject} is attending a lecture at time \texttt{Time}. To simplify without loss of generality, subjects are numbered sequentially starting in 1, classes of a subject are numbered sequentially starting in 1, and time is an integer representing a time slot (for instance, time can be divided into $\SI{30}{\minute}$ slots where the first slot is on Monday from 00:00 to 00:30). This representation of time is merely a convenient way to understand time, as the only thing that matters is the boolean relation that states if two subject-class pairs overlap.
+    \item An array of structures \texttt{student(ID, Grade, Subjects, Options)}, which means student with ID \texttt{ID} has average grade \texttt{Grade} is enrolled in the subjects \texttt{Subjects} which is a list, and has chosen the options  \texttt{Options} which is a list of 3 to 6 schedule options, with each element being a list of the same size as \texttt{Subjects} containing the classes chosen for the respective option.
+    \item Fact using the predicate \texttt{capacity(Capacity)}, where \texttt{Capacity} means the maximum size of a class.
 \end{enumerate}
 
 For each ID in \texttt{student}, there should be a fact \texttt{grade} reporting the grade of that student.
@@ -114,26 +117,33 @@ For each student and for each subject that student is enrolled, his class is out
 
 In order to find the best solution to the problem, we defined which constraints have a higher priority for the final result.
 
-In this function we first consider the balance between students of even and odd IDs. Here we try that every even student in a class can make a pair with a odd student.
-In case this is not possible, we choose the option where the ratio between odd and even students is closer to 1. 
+In this function we first consider the balance between students of even and odd IDs. The optimal ratio is 1, but if it is not possible to pair each odd-numbered student with an even-numbered student the same condition still makes sure that classes too distant from that ratio are penalized by using a square function. 
 
 We then verify, but with lower priority, if the number of students in a class of a given subject is balanced in respect to the other classes of this subject.
+\begin{equation}
+    c_i = \frac{1}{2}\left(1-\frac{ClassSizeOdd}{ClassSizeEven}\right)^2 + \frac{1}{4}\left(1-\frac{ClassSize}{AvgClassSizeInSubject}\right)^2
+\end{equation}
 
-In this function we also have in consideration the placement of each student, with a penalty based on the grade if a student is not placed in his preferred option.
+In this function we also have in consideration the placement of each student, with a penalty based on the grade if a student is not placed in one of his/her options.
+\begin{equation}
+    s_i = \frac{1}{8} \times \begin{cases}
+        -1 : \text{Student was allocated to one of his/her options} \\
+        +1 : \text{Student was not allocated to one of his/her options}
+    \end{cases}
+\end{equation}
 
-The final function:
-
-\begin{gather} 
-    c_i = \frac{1}{2}\left(1-\left(\frac{SumOdd}{SumEven}\right)^2\right) + \frac{1}{4}\left(1-\left(\frac{SumClass}{AvgSubject}\right)^2\right) \\
-    s_i = \frac{1}{8}\sum_{n=i} ^ {StudentsInOption}{Grade_{n}} - \frac{1}{8}\sum_{n=i} ^ {StudentsNotInOption}{Grade_{n}} \\
-    O = \sum{c_i} + \sum{s_i}
-\end{gather}
+The final function is $O$, and it is made of the sum of penalties for each class $c_i$ and for each student $s_i$. The objective is to minimize $O$.
+\begin{equation} 
+    O = \sum_{i \in C}{c_i} + \sum_{i \in St}{s_i}
+\end{equation}
 
 \section{Solution presentation}
 
-The solution visualization is made with the predicate:
+Predicate \texttt{solve(+Classes, +Students, -Solution)} should be called with the appropriate \texttt{Classes} and \texttt{Students} arrays to solve an instance of this problem.
 
-\texttt{predicate.}
+\texttt{Classes} is an array of structures \texttt{class(Subject, Class, TimeSlots)} and \texttt{Students} is an array of structures \texttt{student(ID, Grade, [Option1, Option2, ...])}. Solution is an array of structures \texttt{solution(ID, Allocation)} where \texttt{Allocation} is the schedule that student with a certain \texttt{ID} was allocated (ideally it is equal to one of the student's options, otherwise it is empty or has an allocation different from all the student's options).
+
+The solution array can be visualized by calling \texttt{write\_solution(+Solution)}.
 
 \section{Experiments and results}
 
@@ -141,9 +151,33 @@ The solution visualization is made with the predicate:
 
 \subsection{Search strategies}
 
-We tested different options of search, changing the labelling parameters that controls the variables and solution selection in SICStus Prolog.
+We tested different search strategies, changing the labelling parameters that control variable and solution selection in SICStus Prolog.
+
+\begin{figure}
+    \centering
+    \begin{tabular}{l | l}
+        \hline
+        \textbf{Option} & \textbf{Remarks} \\ \hline
+        \texttt{leftmost} & \\
+        \texttt{min} & \\
+        \texttt{max} & \\
+        \texttt{ff} & \\
+        \texttt{anti\_first\_fail} & \\
+        \texttt{occurence} & \\
+        \texttt{ffc} & \\
+        \texttt{max\_regret} & \\ \hline
+    \end{tabular}
+\end{figure}
 
 \section{Conclusions and future work}
+
+We developed a program capable of generating solutions to the presented student-class alocation problem in time spans deemed useful (in the order of magnitude of seconds) for instances of sizes typically found in practical contexts (tens of subjects and hundreds of students).
+
+This work can be further improved by using better heuristics and possibly an automaton.
+
+The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes. Also randomly generated instances enroll each student in exactly 5 subjects, where in practice a student is enrolled in 4-6 subjects each semester, and the maximum class size is hardcoded to 30.
+
+We did not implement some of the optional constraints due to deadline restrictions.
 
 %
 % ---- Bibliography ----
