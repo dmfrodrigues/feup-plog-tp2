@@ -92,7 +92,7 @@ evaluate_classes(AllClasses, [Class|T], Solution, Value):-
     Class = class(Subject, ID, _),
     number_of_odd_in_class(ID, Solution, Odds),
     number_of_even_in_class(ID, Solution, Evens),
-    write(Evens), write(Odds),
+    format("~d, ~d ~d~n", [ID, Evens, Odds]),
     X is Odds/Evens,
 
     class_size(Class, Solution, ClassSize),
