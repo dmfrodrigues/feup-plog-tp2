@@ -4,7 +4,8 @@
     use_module(library(samsort)).
 
 :-
-    reconsult('utils.pl').
+    reconsult('utils.pl'),
+    reconsult('declare_and_domains.pl').
 
 % generate(+NSubjects, +NClasses, +NStudents, -Classes, -Students)
 generate(NSubjects, NClasses, NStudents, Classes, Students) :-
