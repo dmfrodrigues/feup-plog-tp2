@@ -33,11 +33,17 @@
 % Finds a solution for the given Subjects and Students.
 solve(Classes, Students, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
-    restrict(Classes, Students, Solution),
     get_vars(Solution, Vars),
     format("Got vars~n", []),
+    write(Vars), nl,
+    format("Going to restrict~n", []),
+    restrict(Classes, Students, Solution),
+    format("Restricted~n", []),
+    write(Vars), nl,
     evaluate(Classes, Students, Solution, Value),
     format("About to label~n", []),
+    write(Vars),nl,
+    write(Value),nl,
     minimize(labeling([best], Vars), Value),
     write(Value), nl,
     true.
@@ -82,26 +88,26 @@ sum_classes([Class|T], Solution, Sum):-
     sum_classes(T, Solution, NSum),
     Sum is NSum + ClassSize.
 
-avg_class_size_in_subject(Classes, Subject, Solution, Average):-    format("L85~n", []),
-    all_classes_of_subject(Classes, Subject, SubjectClasses),       format("L86~n", []),
-    sum_classes(SubjectClasses, Solution, Sum),                     format("L87~n", []),
-    length(SubjectClasses, TotalSubjectClasses),                    format("L88~n", []),
-    Average is Sum/TotalSubjectClasses                    ,         format("L89~n", [])
+avg_class_size_in_subject(Classes, Subject, Solution, Average):-
+    all_classes_of_subject(Classes, Subject, SubjectClasses),
+    sum_classes(SubjectClasses, Solution, Sum),
+    length(SubjectClasses, TotalSubjectClasses),
+    Average is Sum/TotalSubjectClasses
     .
 
-evaluate_classes(_AllClasses, [], _Solution, 0) :- format("L92~n", []).
-evaluate_classes(AllClasses, [Class|T], Solution, Value):-  format("L93~n", []),
-    Class = class(Subject, ID, _),                          format("L94~n", []),
-    number_of_odd_in_class(ID, Solution, Odds),             format("L95~n", []),
-    number_of_even_in_class(ID, Solution, Evens),           format("L96~n", []),
-    class_size(Class, Solution, ClassSize),                 format("L97~n", []),
-    avg_class_size_in_subject(AllClasses, Subject, Solution, Average),  format("L98~n", []),
-    Y is ClassSize/Average,                                 format("L99~n", []),
+evaluate_classes(_AllClasses, [], _Solution, 0).
+evaluate_classes(AllClasses, [Class|T], Solution, Value):-
+    Class = class(Subject, ID, _),
+    number_of_odd_in_class(ID, Solution, Odds),
+    number_of_even_in_class(ID, Solution, Evens),
+    class_size(Class, Solution, ClassSize),
+    avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
+    Y is ClassSize/Average,
 
-    NValue1 is 0.1*(Odds-Evens)**2 + 0.25*(1-Y)**2,         format("L101~n", []),
+    NValue1 is 0.1*(Odds-Evens)**2 + 0.25*(1-Y)**2,
 
-    evaluate_classes(AllClasses, T, Solution, NValue2),     format("L103~n", []),
-    Value is NValue1 + NValue2                          ,   format("L104~n", []).
+    evaluate_classes(AllClasses, T, Solution, NValue2),
+    Value is NValue1 + NValue2.
 
 options_in_allocation([Option|T], Allocation):-
     member(Option, Allocation).
@@ -127,8 +133,8 @@ evaluate_allocation([Student|T], Solution, Value):-
     Value is NValue1 + NValue2
     .
 
-evaluate(Classes, Students, Solution, Value):-          format("L131~n", []),
-    evaluate_classes(Classes, Classes, Solution, C),    format("L132~n", []),
+evaluate(Classes, Students, Solution, Value):-
+    evaluate_classes(Classes, Classes, Solution, C),
     evaluate_allocation(Students, Solution, S),
     Value is C
     .
