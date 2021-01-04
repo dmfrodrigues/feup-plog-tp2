@@ -36,7 +36,9 @@ solve(Classes, Students, Solution) :-
     restrict(Classes, Students, Solution),
     get_vars(Solution, Vars),
     evaluate(Solution, Value),
-    minimize(labeling([best], Vars), Value).
+    minimize(labeling([best], Vars), Value),
+    write(Value), nl,
+    true.
 
 number_of_even_in_class(_Class, [], 0).
 number_of_even_in_class(Class, [solution(ID, Allocation)|RSolution], N):-
@@ -148,20 +150,20 @@ write_sol(solution(ID, [A|Allocation])) :-
     write_sol(solution(ID, Allocation)).
 
 :-
-    % Classes = [
-    %     class(1, 1, []),
-    %     class(1, 2, []),
-    %     class(2, 3, []),
-    %     class(2, 4, []),
-    %     class(2, 5, [])
-    % ],
-    % Students = [
-    %     student(201800170, 17, [1,2], [[2, 3], [1, 4], [1, 3]]),
-    %     student(201806429, 18, [1,2], [[1, 4], [2, 5], [1, 5]])
-    % ],
-    generate(10, 50, 150, Classes, Students),
-    % solve(Classes, Students, Solution),
-    % write_solution(Solution),
-    % print_statistics_header,
-    % print_statistics,
+    Classes = [
+        class(1, 1, []),
+        class(1, 2, []),
+        class(2, 3, []),
+        class(2, 4, []),
+        class(2, 5, [])
+    ],
+    Students = [
+        student(201800170, 17, [1,2], [[2, 3], [1, 4], [1, 3]]),
+        student(201806429, 18, [1,2], [[1, 4], [2, 5], [1, 5]])
+    ],
+    % generate(10, 50, 150, Classes, Students),
+    solve(Classes, Students, Solution),
+    write_solution(Solution),
+    print_statistics_header,
+    print_statistics,
     true.
