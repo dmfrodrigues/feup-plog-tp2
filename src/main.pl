@@ -83,7 +83,6 @@ sum_classes([Class|T], Solution, Sum):-
     Sum is NSum + ClassSize.
 
 avg_class_size_in_subject(Classes, Subject, Solution, Average):-    format("L85~n", []),
-    write(Classes), write(Subject),
     all_classes_of_subject(Classes, Subject, SubjectClasses),       format("L86~n", []),
     sum_classes(SubjectClasses, Solution, Sum),                     format("L87~n", []),
     length(SubjectClasses, TotalSubjectClasses),                    format("L88~n", []),
@@ -130,7 +129,7 @@ evaluate_allocation([Student|T], Solution, Value):-
 
 evaluate(Classes, Students, Solution, Value):-          format("L131~n", []),
     evaluate_classes(Classes, Classes, Solution, C),    format("L132~n", []),
-    % evaluate_allocation(Students, Solution, S),
+    evaluate_allocation(Students, Solution, S),
     Value is C
     .
 
