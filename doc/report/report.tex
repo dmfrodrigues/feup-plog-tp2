@@ -117,9 +117,13 @@ In order to find the best solution to the problem, we defined which constraints 
 In this function we first consider the balance between students of even and odd IDs. Here we try that every even student in a class can make a pair with a odd student.
 In case this is not possible, we choose the option where the ratio between odd and even students is closer to 1. 
 
-We then verify, but with lower priority, if the number of students in a class of given subject is balanced in respect to the other classes of this subject.
+We then verify, but with lower priority, if the number of students in a class of a given subject is balanced in respect to the other classes of this subject.
 
-\begin{gather}
+In this function we also have in consideration the placement of each student, with a penalty based on the grade if a student is not placed in his preferred option.
+
+The final function:
+
+\begin{gather} 
     c_i = \frac{1}{2}\left(1-\left(\frac{SumOdd}{SumEven}\right)^2\right) + \frac{1}{4}\left(1-\left(\frac{SumClass}{AvgSubject}\right)^2\right) \\
     s_i = \frac{1}{8}\sum_{n=i} ^ {StudentsInOption}{Grade_{n}} - \frac{1}{8}\sum_{n=i} ^ {StudentsNotInOption}{Grade_{n}} \\
     O = \sum{c_i} + \sum{s_i}
