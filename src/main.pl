@@ -55,6 +55,15 @@ write_sol(solution(ID, [A|Allocation])) :-
     format('~d ', A),
     write_sol(solution(ID, Allocation)).
 
+print_statistics_header :- format('Resumptions~11+,Entailments~12+,Prunings~9+,Backtracks~11+,Constraints~12+~n', []).
+print_statistics :-
+    fd_statistics(resumptions, Resumptions),
+    fd_statistics(entailments, Entailments),
+    fd_statistics(prunings   , Prunings   ),
+    fd_statistics(backtracks , Backtracks ),
+    fd_statistics(constraints, Constraints),
+    format('~d~11+,~d~12+,~d~9+,~d~11+,~d~12+~n', [Resumptions, Entailments, Prunings, Backtracks, Constraints]).
+
 :-
     Classes = [
         class(1, 1, []),
@@ -68,4 +77,6 @@ write_sol(solution(ID, [A|Allocation])) :-
         student(201806429, 18, [1,2], [[1, 4], [2, 5], [1, 5]])
     ],
     solve(Classes, Students, Solution),
-    write_solution(Solution).
+    write_solution(Solution),
+    print_statistics_header,
+    print_statistics.
