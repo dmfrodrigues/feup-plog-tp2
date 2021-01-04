@@ -1,5 +1,6 @@
 :-
     use_module(library(random)),
+    use_module(library(lists)),
     use_module(library(samsort)).
 
 :-
@@ -8,8 +9,49 @@
 % generate(+NSubjects, +NClasses, +NStudents, -Classes, -Students)
 generate(NSubjects, NClasses, NStudents, Classes, Students) :-
     generate_classes(NSubjects, NClasses, Classes),
+    generate_students(Classes, NStudents, Students),
     true.
 
+% generate_students(+Classes, +NStudents, -Students) 
+
+generate_students(_, 0, []):- !.
+generate_students(Classes, NStudents, [student(ID, Grade, Subjects, Options)|T]) :-
+    ID = NStudents,
+    random(1, 20, Grade),
+    random(1, 5, NSubjects),
+    random(3, 6, NOptions),
+    findAllSubjects(Classes, TotalSubjects),
+    generate_subjects(TotalSubjects, NSubjects, Subjects),
+    generate_options(Subjects, NOptions, Options),
+    N1 is NStudents - 1,
+    generate_students(Classes, N1, T).
+
+
+findAllSubjects([], []).
+findAllSubjects([class(Subject, _, _)|CT], [Subject | ST]):-
+    findAllSubjects(CT, ST).
+
+generate_subjects([], _, []):- !.   
+generate_subjects(_, 0, []):- !.
+generate_subjects(Subjects, NSubjects, [Subject|T]):-
+    random_member(Subject, Subjects), 
+    delete(Subjects, Subject, RSubjects),
+    N1 is NSubjects - 1,
+    generate_subjects(RSubjects, N1, T).
+
+
+get_option(Classes, Subjects, Option):-
+
+    .
+
+generate_options(_, 0, []):- !.
+generate_options(Subjects, NOptions, [Option|T]) :-
+    get_option(Classes, Subjects, Option),
+    N1 is NOptions - 1,
+    generate_options(Subjects, N1, T).
+
+
+%generate_classes
 generate_classes(NSubjects, NClasses, Classes) :-
     get_random_sizes_adding_up(NSubjects, NClasses, Answer),
     generate_classes_cycle(Answer, 1, 1, Classes),
