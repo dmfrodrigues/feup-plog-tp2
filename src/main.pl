@@ -3,7 +3,8 @@
 
 :-
     reconsult('declare_and_domains.pl'),
-    reconsult('restrictions.pl').
+    reconsult('restrictions.pl'),
+    reconsult('generate.pl').
 
 %   class(S, C, Times)
 % Subject S has a class C which is lectured in the
@@ -66,18 +67,20 @@ print_statistics :-
     format('~d~11+,~d~12+,~d~9+,~d~11+,~d~12+,~d~14+~n', [Resumptions, Entailments, Prunings, Backtracks, Constraints, Total_runtime]).
 
 :-
-    Classes = [
-        class(1, 1, []),
-        class(1, 2, []),
-        class(2, 3, []),
-        class(2, 4, []),
-        class(2, 5, [])
-    ],
-    Students = [
-        student(201800170, 17, [1,2], [[2, 3], [1, 4], [1, 3]]),
-        student(201806429, 18, [1,2], [[1, 4], [2, 5], [1, 5]])
-    ],
-    solve(Classes, Students, Solution),
-    write_solution(Solution),
-    print_statistics_header,
-    print_statistics.
+    % Classes = [
+    %     class(1, 1, []),
+    %     class(1, 2, []),
+    %     class(2, 3, []),
+    %     class(2, 4, []),
+    %     class(2, 5, [])
+    % ],
+    % Students = [
+    %     student(201800170, 17, [1,2], [[2, 3], [1, 4], [1, 3]]),
+    %     student(201806429, 18, [1,2], [[1, 4], [2, 5], [1, 5]])
+    % ],
+    generate(10, 50, 150, Classes, Students),
+    % solve(Classes, Students, Solution),
+    % write_solution(Solution),
+    % print_statistics_header,
+    % print_statistics,
+    true.
