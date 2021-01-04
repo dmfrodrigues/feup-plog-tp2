@@ -35,7 +35,9 @@ solve(Classes, Students, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
     restrict(Classes, Students, Solution),
     get_vars(Solution, Vars),
+    format("Got vars~n", []),
     evaluate(Classes, Students, Solution, Value),
+    format("About to label~n", []),
     minimize(labeling([best], Vars), Value),
     write(Value), nl,
     true.
@@ -92,7 +94,6 @@ evaluate_classes(AllClasses, [Class|T], Solution, Value):-
     Class = class(Subject, ID, _),
     number_of_odd_in_class(ID, Solution, Odds),
     number_of_even_in_class(ID, Solution, Evens),
-    format("~d, ~d ~d~n", [ID, Evens, Odds]),
     class_size(Class, Solution, ClassSize),
     avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
     Y is ClassSize/Average,
@@ -126,8 +127,8 @@ evaluate_allocation([Student|T], Solution, Value):-
     Value is NValue1 + NValue2
     .
 
-evaluate(Classes, Students, Solution, Value):-
-    evaluate_classes(Classes, Classes, Solution, C),
+evaluate(Classes, Students, Solution, Value):-          format("L131~n", []),
+    evaluate_classes(Classes, Classes, Solution, C),    format("L132~n", []),
     % evaluate_allocation(Students, Solution, S),
     Value is C
     .
