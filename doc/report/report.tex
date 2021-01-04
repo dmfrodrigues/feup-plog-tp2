@@ -24,8 +24,10 @@
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{Diogo Miguel Ferreira Rodrigues (\email{diogo.rodrigues@fe.up.pt})\inst{1},\\
-Breno Accioly de Barros Pimentel (\email{up201800170@fe.up.pt})\inst{1}}
+\author{
+Diogo Miguel Ferreira Rodrigues (\email{diogo.rodrigues@fe.up.pt}),\\
+Breno Accioly de Barros Pimentel (\email{up201800170@fe.up.pt})
+}
 
 \authorrunning{D. Rodrigues and B. Pimentel}
 
@@ -37,13 +39,14 @@ PLOG -- Class 3MIEIC02, Group TuCoTuTeCo\_4
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-The abstract should briefly summarize the contents of the paper in
-150--250 words.
+Due to the pandemic situation caused by COVID-19, educational institutions are forced to adopt new methods to allocate students to classes on subjects they are enrolled. This is reflected in the additional set of restrictions enforced by health authorities about room area and capacity for instance. In this paper we present a practical approach to solving instances of the student-class allocation with additional constraints by implementing and analysing a solution using the Prolog programming language to approach this problem as a generic constraint optimization problem (COP).
 
 \keywords{
-First keyword \and
-Second keyword \and
-Another keyword.}
+COP \and
+CLP \and
+Optimization \and
+Student-class problem \and
+Prolog}
 \end{abstract}
 
 \section{Introduction}
@@ -52,7 +55,7 @@ Student--class allocation is a routine problem for educational institutions, and
 However, as a result of the COVID-19 pandemic, further constraints must be applied to increase physical distancing and reduce the number of contacts, such as more strongly enforcing class balancing, and also balancing the number of students with even and odd ID number in a class so students with even and odd IDs can have presential classes in alternating weeks.
 
 We will thus model this problem as a constraint optimization problem (COP) with a set of soft and hard constraints, and provide it with a value function that should be optimized.
-We encoded the problem as a Prolog program using SICStus Prolog and the constraint logic programming (CLP) module \texttt{clpfd} (\textit{CLP over Finite Domains}), with an interface to solve an instance of the problem.
+We encoded the problem as a Prolog program using SICStus Prolog \cite{sicstus} and the constraint logic programming (CLP) module \texttt{clpfd} (\textit{CLP over Finite Domains}), with an interface to solve an instance of the problem.
 We then generate a set of different scenarios with varying dimensions to analyse the time complexity of the solution.
 Finally we present the results of our experiments.
 
@@ -82,9 +85,9 @@ The restrictions are as follows:
 
 The input data is made of:
 \begin{enumerate}
-    \item Facts using the predicate \texttt{schedule(Subject, Class, Time)}, which means class \texttt{Class} of subject \texttt{Subject} is attending a lecture at time \texttt{Time}. To simplify without loss of generality, subjects are numbered sequentially starting in 1, classes of a subject are numbered sequentially starting in 1, and time is an integer representing a time slot (for instance, time can be divided into $\SI{30}{\minute}$ slots where the first slot is on Monday from 00:00 to 00:30). This representation of time is merely a convenient way to understand time, as the only thing that matters is the boolean relation that states if two subject-class pairs overlap.
-    \item Facts using the predicate \texttt{student(ID, Grade, Subjects, Options)}, which means student with ID \texttt{ID} has average grade \texttt{Grade} is enrolled in the subjects \texttt{Subjects} which is a list, and has chosen the options  \texttt{Options} which is a list of 3 to 6 schedule options, with each element being a list of the same size as \texttt{Subjects} containing the classes chosen for the respective option.
-    \item Fact using the predicate \texttt{capacity(Capacity)}, which \texttt{Capacity} means the maximum students attending to a class simultaneously.
+    \item An array of structures \texttt{class(Subject, Class, Time)}, which means class \texttt{Class} of subject \texttt{Subject} is attending a lecture at time \texttt{Time}. To simplify without loss of generality, subjects are numbered sequentially starting in 1, classes of a subject are numbered sequentially starting in 1, and time is an integer representing a time slot (for instance, time can be divided into $\SI{30}{\minute}$ slots where the first slot is on Monday from 00:00 to 00:30). This representation of time is merely a convenient way to understand time, as the only thing that matters is the boolean relation that states if two subject-class pairs overlap.
+    \item An array of structures \texttt{student(ID, Grade, Subjects, Options)}, which means student with ID \texttt{ID} has average grade \texttt{Grade} is enrolled in the subjects \texttt{Subjects} which is a list, and has chosen the options  \texttt{Options} which is a list of 3 to 6 schedule options, with each element being a list of the same size as \texttt{Subjects} containing the classes chosen for the respective option.
+    \item Fact using the predicate \texttt{capacity(Capacity)}, where \texttt{Capacity} means the maximum size of a class.
 \end{enumerate}
 
 For each ID in \texttt{student}, there should be a fact \texttt{grade} reporting the grade of that student.
@@ -172,7 +175,7 @@ We developed a program capable of generating solutions to the presented student-
 
 This work can be further improved by using better heuristics and possibly an automaton.
 
-The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes. Also randomly generated instances enroll each student in exactly 5 subjects, where in practice a student is enrolled in 4-6 subjects each semester.
+The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes. Also randomly generated instances enroll each student in exactly 5 subjects, where in practice a student is enrolled in 4-6 subjects each semester, and the maximum class size is hardcoded to 30.
 
 We did not implement some of the optional constraints due to deadline restrictions.
 

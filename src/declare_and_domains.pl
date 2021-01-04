@@ -28,7 +28,7 @@ domains(Classes, [Subject|StudentSubjects], [AssignedClass|AssignedClasses]) :-
     domain([AssignedClass], Min, Max),
     domains(Classes, StudentSubjects, AssignedClasses).
 
-% subject_has_N_classes(+Classes, +Subject, -N)
+% subject_classes(+Classes, +Subject, -N)
 % Given the list of all classes Classes,
 % subject Subject has N classes.
 subject_classes(Classes, Subject, N) :-
