@@ -82,11 +82,11 @@ sum_classes([Class|T], Solution, Sum):-
     sum_classes(T, Solution, NSum),
     Sum is NSum + ClassSize.
 
-avg_class_size_in_subject(Classes, Subject, Solution, Average):-
-    all_classes_of_subject(Classes, Subject, SubjectClasses),
-    sum_classes(SubjectClasses, Solution, Sum),
-    length(SubjectClasses, TotalSubjectClasses),
-    Average is Sum/TotalSubjectClasses
+avg_class_size_in_subject(Classes, Subject, Solution, Average):-    format("L85~n", []),
+    all_classes_of_subject(Classes, Subject, SubjectClasses),       format("L86~n", []),
+    sum_classes(SubjectClasses, Solution, Sum),                     format("L87~n", []),
+    length(SubjectClasses, TotalSubjectClasses),                    format("L88~n", []),
+    Average is Sum/TotalSubjectClasses                    ,         format("L89~n", [])
     .
 
 evaluate_classes(_AllClasses, [], _Solution, 0) :- format("L92~n", []).
