@@ -72,7 +72,7 @@ class_size(Class, [solution(_ID, _Allocation)|T], N):-
 all_classes_of_subject([], _, []).
 all_classes_of_subject([class(Subject, Class, _)|T1], Subject, [Class|T2]):-
     all_classes_of_subject(T1, Subject, T2).
-all_classes_of_subject([class(Subject, _Class, _)|T1], Subject, NClasses):-
+all_classes_of_subject([class(_S1, _Class, _)|T1], Subject, NClasses):-
     all_classes_of_subject(T1, Subject, NClasses)
     .
 
@@ -83,6 +83,7 @@ sum_classes([Class|T], Solution, Sum):-
     Sum is NSum + ClassSize.
 
 avg_class_size_in_subject(Classes, Subject, Solution, Average):-    format("L85~n", []),
+    write(Classes), write(Subject),
     all_classes_of_subject(Classes, Subject, SubjectClasses),       format("L86~n", []),
     sum_classes(SubjectClasses, Solution, Sum),                     format("L87~n", []),
     length(SubjectClasses, TotalSubjectClasses),                    format("L88~n", []),
