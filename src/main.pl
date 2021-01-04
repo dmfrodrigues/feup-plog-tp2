@@ -59,11 +59,11 @@ number_of_odd_in_class(Class, [solution(_, _)|RSolution], N):-
     number_of_odd_in_class(Class, RSolution, N).
 
 class_size(_, [], 0).
-class_size(Class, [solution(ID, Allocation)|T], N):-
+class_size(Class, [solution(_ID, Allocation)|T], N):-
     member(Class, Allocation),
     class_size(Class, T, N1),
     N is N1 + 1.
-class_size(Class, [solution(ID, Allocation)|T], N):-
+class_size(Class, [solution(_ID, _Allocation)|T], N):-
     class_size(Class, T, N).
 
 
@@ -83,13 +83,13 @@ sum_classes([Class|T], Solution, Sum):-
 avg_class_size_in_subject(Classes, Subject, Solution, Average):-
     all_classes_of_subject(Classes, Subject, SubjectClasses),
     sum_classes(SubjectClasses, Solution, Sum),
-    TotalSubjectClasses is lenght(SubjectClasses),
+    length(SubjectClasses, TotalSubjectClasses),
     Average is Sum/TotalSubjectClasses
     .
 
 evaluate_classes([], _Solution, 0).
 evaluate_classes([Class|T], Solution, Value):-
-    Class = class(Subject, ID, _),
+    Class = class(Subject, _ID, _),
     number_of_odd_in_class(Class, Solution, Odds),
     number_of_even_in_class(Class, Solution, Evens),
     X is Odds/Evens,
@@ -105,7 +105,7 @@ options_in_allocation([Option|T], Allocation):-
 options_in_allocation([Option|T], Allocation):-
     options_in_allocation(T, Allocation).
 
-check_allocation(student(ID1, _G, _S, Options), [solution(I2, Allocation)|T]):-
+check_allocation(student(ID1, _G, _S, Options), [solution(ID2, _Allocation)|T]):-
     ID1 \= ID2,
     check_allocation(student(ID1, _G, _S, Options), T).
 check_allocation(student(ID, _G, _S, Options), [solution(ID, Allocation)|_T]):-
