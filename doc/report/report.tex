@@ -121,7 +121,7 @@ We then verify, but with lower priority, if the number of students in a class of
 
 \begin{gather}
     c_i = \frac{1}{2}\left(1-\left(\frac{SumOdd}{SumEven}\right)^2\right) + \frac{1}{4}\left(1-\left(\frac{SumClass}{AvgSubject}\right)^2\right) \\
-    s_i = ? \\
+    s_i = \frac{1}{8}\sum_{n=i} ^ {StudentsInOption}{Grade_{i}} - \frac{1}{8}\sum_{n=i} ^ {StudentsNotInOption}{Grade_{i}} \\
     O = \sum{c_i} + \sum{s_i}
 \end{gather}
 
