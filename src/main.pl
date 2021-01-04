@@ -35,7 +35,98 @@ solve(Classes, Students, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
     restrict(Classes, Students, Solution),
     get_vars(Solution, Vars),
-    labeling([], Vars).
+    evaluate(Solution, Value),
+    minimize(labeling([best], Vars), Value).
+
+number_of_even_in_class(_Class, [], 0).
+number_of_even_in_class(Class, [solution(ID, Allocation)|RSolution], N):-
+    member(Class, Allocation),
+    0 is mod(ID, 2),
+    number_of_even_in_class(Class, RSolution, N1),
+    N is N1 + 1.
+number_of_even_in_class(Class, [solution(_, _)|RSolution], N):-
+    number_of_even_in_class(Class, RSolution, N).
+
+number_of_odd_in_class(_Class, [], 0).
+number_of_odd_in_class(Class, [solution(ID, Allocation)|RSolution], N):-
+    member(Class, Allocation),
+    1 is mod(ID, 2),
+    number_of_odd_in_class(Class, RSolution, N1),
+    N is N1 + 1.
+number_of_odd_in_class(Class, [solution(_, _)|RSolution], N):-
+    number_of_odd_in_class(Class, RSolution, N).
+
+class_size(_, [], 0).
+class_size(Class, [solution(ID, Allocation)|T], N):-
+    member(Class, Allocation),
+    class_size(Class, T, N1),
+    N is N1 + 1.
+class_size(Class, [solution(ID, Allocation)|T], N):-
+    class_size(Class, T, N).
+
+
+all_classes_of_subject([], _, []).
+all_classes_of_subject([class(Subject, Class, _)|T1], Subject, [Class|T2]):-
+    all_classes_of_subject(T1, Subject, T2).
+all_classes_of_subject([class(Subject, _Class, _)|T1], Subject, NClasses):-
+    all_classes_of_subject(T1, Subject, NClasses)
+    .
+
+sum_classes([], _, 0).
+sum_classes([Class|T], Solution, Sum):-
+    class_size( Class, Solution, ClassSize),
+    sum_classes(T, Solution, NSum),
+    Sum is NSum + ClassSize.
+
+avg_class_size_in_subject(Classes, Subject, Solution, Average):-
+    all_classes_of_subject(Classes, Subject, SubjectClasses),
+    sum_classes(SubjectClasses, Solution, Sum),
+    TotalSubjectClasses is lenght(SubjectClasses),
+    Average is Sum/TotalSubjectClasses
+    .
+
+evaluate_classes([], _Solution, 0).
+evaluate_classes([Class|T], Solution, Value):-
+    Class = class(Subject, ID, _),
+    number_of_odd_in_class(Class, Solution, Odds),
+    number_of_even_in_class(Class, Solution, Evens),
+    X is Odds/evens,
+    class_size(Class, Solution, ClassSize),
+    avg_class_size_in_subject(Classes, Subject, Solution, Average),
+    Y is ClassSize/Average,
+    NValue1 is 0.5*(1-X)**2 + 0.25*(1-Y)**2,
+    evaluate_classes(T, Solution, NValue2),
+    Value is NValue1 + NValue2.
+
+options_in_allocation([Option|T], Allocation):-
+    member(Option, Allocation).
+options_in_allocation([Option|T], Allocation):-
+    options_in_allocation(T, Allocation).
+
+check_allocation(student(ID1, _G, _S, Options), [solution(I2, Allocation)|T]):-
+    ID1 \= ID2,
+    check_allocation(student(ID1, _G, _S, Options), T).
+check_allocation(student(ID, _G, _S, Options), [solution(ID, Allocation)|_T]):-
+    !,
+    options_in_allocation(Options, Allocation)
+    .
+
+evaluate_allocation([], _, 0).
+evaluate_allocation([Student|T], Solution, Value):-
+    (
+    (check_allocation(Student, Solution)) -> 
+        S is 1; S is -1
+    ),
+    NValue1 is 0.125*S,
+    evaluate_allocation(T, Solution, NValue2),
+    Value is NValue1 + NValue2
+    .
+
+evaluate(Classes, Students, Solution, Value):-
+    evaluate_classes(Classes, Solution, C),
+    evaluate_allocation(Students, Solution, S),
+    Value is C + S
+    .
 
 get_vars([], []) :- !.
 get_vars([solution(_, Vars1)|Solution], Vars) :-

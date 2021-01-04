@@ -39,12 +39,14 @@ generate_subjects(Subjects, NSubjects, [Subject|T]):-
     N1 is NSubjects - 1,
     generate_subjects(RSubjects, N1, T).
 
+/*
 subject_classes([], _, []).
 subject_classes([class(Subject, Class, _)|T1], Subject, [Class|T2]):-
     subject_classes(T1, Subject, T2).
 subject_classes([class(S, _C, _)|T1], Subject, Classes):-
     S \= Subject,
     subject_classes(T1, Subject, Classes).
+*/
 
 get_option(_, [], []).
 get_option(Classes, [Subject|ST], [Class|OT]):-
