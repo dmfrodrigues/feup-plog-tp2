@@ -87,16 +87,20 @@ avg_class_size_in_subject(Classes, Subject, Solution, Average):-
     Average is Sum/TotalSubjectClasses
     .
 
-evaluate_classes([], _Solution, 0).
-evaluate_classes([Class|T], Solution, Value):-
-    Class = class(Subject, _ID, _),
-    number_of_odd_in_class(Class, Solution, Odds),
-    number_of_even_in_class(Class, Solution, Evens),
+evaluate_classes(_AllClasses, [], _Solution, 0).
+evaluate_classes(AllClasses, [Class|T], Solution, Value):-
+    Class = class(Subject, ID, _),
+    number_of_odd_in_class(ID, Solution, Odds),
+    number_of_even_in_class(ID, Solution, Evens),
+    write(Evens), write(Odds),
     X is Odds/Evens,
+
     class_size(Class, Solution, ClassSize),
-    avg_class_size_in_subject(Classes, Subject, Solution, Average),
+    avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
     Y is ClassSize/Average,
+
     NValue1 is 0.5*(1-X)**2 + 0.25*(1-Y)**2,
+
     evaluate_classes(T, Solution, NValue2),
     Value is NValue1 + NValue2.
 
@@ -125,7 +129,7 @@ evaluate_allocation([Student|T], Solution, Value):-
     .
 
 evaluate(Classes, Students, Solution, Value):-
-    evaluate_classes(Classes, Solution, C),
+    evaluate_classes(Classes, Classes, Solution, C),
     evaluate_allocation(Students, Solution, S),
     Value is C + S
     .
