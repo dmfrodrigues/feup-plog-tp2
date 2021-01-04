@@ -41,6 +41,20 @@ get_vars([solution(_, Vars1)|Solution], Vars) :-
     get_vars(Solution, Vars2),
     append(Vars1, Vars2, Vars).
 
+% write_solution(A) :- write(A).
+
+write_solution([]) :- !.
+write_solution([solution(ID, Allocation)|Solution]) :-
+    format('~d ', ID),
+    write_sol(solution(ID, Allocation)),
+    format('~n', []),
+    write_solution(Solution).
+
+write_sol(solution(_ID, [])) :- !.
+write_sol(solution(ID, [A|Allocation])) :-
+    format('~d ', A),
+    write_sol(solution(ID, Allocation)).
+
 :-
     Classes = [
         class(1, 1, []),
@@ -54,4 +68,4 @@ get_vars([solution(_, Vars1)|Solution], Vars) :-
         student(201806429, 18, [1,2], [[1, 4], [2, 5], [1, 5]])
     ],
     solve(Classes, Students, Solution),
-    write(Solution).
+    write_solution(Solution).
