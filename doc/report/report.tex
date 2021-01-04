@@ -39,7 +39,7 @@ PLOG -- Class 3MIEIC02, Group TuCoTuTeCo\_4
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-Due to the pandemic situation caused by COVID-19, educational institutions are forced to adopt new methods to allocate students to classes on subjects they are enrolled. This is reflected in the additional set of restrictions enforced by health authorities about room area and capacity for instance. In this paper we present a practical approach to solving instances of the student-class allocation with additional constraints by implementing and analysing a solution using the Prolog programming language to approach this problem as a generic constraint optimization problem (COP).
+Due to the pandemic situation caused by COVID-19, educational institutions are forced to adopt new methods to allocate students to classes on subjects they are enrolled. This is reflected in the additional set of restrictions enforced by health authorities about room area and capacity for instance. In this paper we present a practical approach to solving instances of the student-class allocation problem with additional constraints by implementing and analysing a solution using the Prolog programming language to approach this problem as a generic constraint optimization problem (COP).
 
 \keywords{
 COP \and
@@ -54,9 +54,9 @@ Prolog}
 Student--class allocation is a routine problem for educational institutions, and is usually solved as a constrainted resource allocation problem where classes are the resources, the agents are the students and subject to constraints such as a student not having overlapping classes of different subjects and balancing class sizes.
 However, as a result of the COVID-19 pandemic, further constraints must be applied to increase physical distancing and reduce the number of contacts, such as more strongly enforcing class balancing, and also balancing the number of students with even and odd ID number in a class so students with even and odd IDs can have presential classes in alternating weeks.
 
-We will thus model this problem as a constraint optimization problem (COP) with a set of soft and hard constraints, and provide it with a value function that should be optimized.
+We will thus model this problem as a constraint optimization problem (COP) with a set of soft and hard constraints, and provide it with an evaluation function that should be optimized.
 We encoded the problem as a Prolog program using SICStus Prolog \cite{sicstus} and the constraint logic programming (CLP) module \texttt{clpfd} (\textit{CLP over Finite Domains}), with an interface to solve an instance of the problem.
-We then generate a set of different scenarios with varying dimensions to analyse the time complexity of the solution.
+We then generate a set of different scenarios with varying dimensions to analyse the time complexity of the solution and the effect of using different search strategies.
 Finally we present the results of our experiments.
 
 \section{Problem description}
@@ -157,15 +157,15 @@ We tested different search strategies, changing the labelling parameters that co
     \centering
     \begin{tabular}{l | l}
         \hline
-        \textbf{Option} & \textbf{Remarks} \\ \hline
-        \texttt{leftmost} & \\
-        \texttt{min} & \\
-        \texttt{max} & \\
-        \texttt{ff} & \\
-        \texttt{anti\_first\_fail} & \\
-        \texttt{occurence} & \\
-        \texttt{ffc} & \\
-        \texttt{max\_regret} & \\ \hline
+        \textbf{Option}            & \textbf{Remarks}                                       \\ \hline
+        \texttt{leftmost}          & Indifferent, as variables do not have a specific order \\
+        \texttt{min}               & Indifferent, as variables do not have a specific order \\
+        \texttt{max}               & Indifferent, as variables do not have a specific order \\
+        \texttt{ff}                & May be a bit faster                                    \\
+        \texttt{anti\_first\_fail} & May be a bit slower                                    \\
+        \texttt{occurence}         & May be a bit faster in a constrain and test system     \\
+        \texttt{ffc}               & May be a bit faster                                    \\
+        \texttt{max\_regret}       &  \\ \hline
     \end{tabular}
 \end{figure}
 
