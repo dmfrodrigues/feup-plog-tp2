@@ -101,7 +101,7 @@ evaluate_classes(AllClasses, [Class|T], Solution, Value):-  format("L93~n", []),
     NValue1 is 0.1*(Odds-Evens)**2 + 0.25*(1-Y)**2,         format("L101~n", []),
 
     evaluate_classes(AllClasses, T, Solution, NValue2),     format("L103~n", []),
-    Value is NValue1 + NValue2                          ,   format("L104~n", []),.
+    Value is NValue1 + NValue2                          ,   format("L104~n", []).
 
 options_in_allocation([Option|T], Allocation):-
     member(Option, Allocation).
@@ -128,6 +128,10 @@ evaluate_allocation([Student|T], Solution, Value):-
     .
 
 evaluate(Classes, Students, Solution, Value):-          format("L131~n", []),
+    write(Classes ), nl,
+    write(Students), nl,
+    write(Solution), nl,
+    write(Value   ), nl,
     evaluate_classes(Classes, Classes, Solution, C),    format("L132~n", []),
     % evaluate_allocation(Students, Solution, S),
     Value is C
