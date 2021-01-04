@@ -150,15 +150,17 @@ The solution array can be visualized by calling \texttt{write\_solution(+Solutio
 
 \section{Experiments and results}
 
+No practical experiments on dimensional analysis or search strategies could be performed, as we found major difficulties trying to define the complex constraints that this problem required in Prolog.
+
 \subsection{Dimensional analysis}
+
+Time complexity is expected to depend linearly on the number of students.
 
 \subsection{Search strategies}
 
-We tested different search strategies, changing the labelling parameters that control variable and solution selection in SICStus Prolog.
-
 \begin{figure}
     \centering
-    \caption{Different ordering options}
+    \caption{Expected results for different ordering options}
     \begin{tabular}{l | r | l}
         \hline
         \textbf{Option}            & \textbf{Time} & \textbf{Remarks}                                       \\ \hline
@@ -169,33 +171,19 @@ We tested different search strategies, changing the labelling parameters that co
         \texttt{anti\_first\_fail} &               & May be a bit slower                                    \\
         \texttt{occurence}         &               & May be a bit faster in a constrain and test system     \\
         \texttt{ffc}               &               & May be a bit faster                                    \\
-        \texttt{max\_regret}       &               &  \\ \hline
-    \end{tabular}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \caption{Different value selection options}
-    \begin{tabular}{l | r | l}
-        \hline
-        \textbf{Option} & \textbf{Time} & \textbf{Remarks}                                       \\ \hline
-        \texttt{step}   &               &  \\
-        \texttt{enum}   &               &  \\
-        \texttt{bisect} &               &  \\
-        \texttt{median} &               &  \\
-        \texttt{middle} &               &  \\ \hline
+        \texttt{max\_regret}       &               & - \\ \hline
     \end{tabular}
 \end{figure}
 
 \section{Conclusions and future work}
 
-We developed a program capable of generating solutions to the presented student-class alocation problem in time spans deemed useful (in the order of magnitude of seconds) for instances of sizes typically found in practical contexts (tens of subjects and hundreds of students).
+We developed a program to generate solutions to the presented student-class alocation problem.
 
 This work can be further improved by using better heuristics and possibly an automaton.
 
 The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes. Also randomly generated instances enroll each student in exactly 5 subjects, where in practice a student is enrolled in 4-6 subjects each semester, and the maximum class size is hardcoded to 30.
 
-We did not implement some of the optional constraints due to deadline restrictions.
+We did not implement some of the optional constraints due to deadline restrictions and technical difficulties due to the complexity of the constraints.
 
 %
 % ---- Bibliography ----
