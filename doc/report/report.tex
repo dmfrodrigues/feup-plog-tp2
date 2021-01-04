@@ -155,17 +155,32 @@ We tested different search strategies, changing the labelling parameters that co
 
 \begin{figure}
     \centering
-    \begin{tabular}{l | l}
+    \caption{Different ordering options}
+    \begin{tabular}{l | r | l}
         \hline
-        \textbf{Option}            & \textbf{Remarks}                                       \\ \hline
-        \texttt{leftmost}          & Indifferent, as variables do not have a specific order \\
-        \texttt{min}               & Indifferent, as variables do not have a specific order \\
-        \texttt{max}               & Indifferent, as variables do not have a specific order \\
-        \texttt{ff}                & May be a bit faster                                    \\
-        \texttt{anti\_first\_fail} & May be a bit slower                                    \\
-        \texttt{occurence}         & May be a bit faster in a constrain and test system     \\
-        \texttt{ffc}               & May be a bit faster                                    \\
-        \texttt{max\_regret}       &  \\ \hline
+        \textbf{Option}            & \textbf{Time} & \textbf{Remarks}                                       \\ \hline
+        \texttt{leftmost}          &               & Indifferent, as variables do not have a specific order \\
+        \texttt{min}               &               & Indifferent, as variables do not have a specific order \\
+        \texttt{max}               &               & Indifferent, as variables do not have a specific order \\
+        \texttt{ff}                &               & May be a bit faster                                    \\
+        \texttt{anti\_first\_fail} &               & May be a bit slower                                    \\
+        \texttt{occurence}         &               & May be a bit faster in a constrain and test system     \\
+        \texttt{ffc}               &               & May be a bit faster                                    \\
+        \texttt{max\_regret}       &               &  \\ \hline
+    \end{tabular}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{Different value selection options}
+    \begin{tabular}{l | r | l}
+        \hline
+        \textbf{Option} & \textbf{Time} & \textbf{Remarks}                                       \\ \hline
+        \texttt{step}   &               &  \\
+        \texttt{enum}   &               &  \\
+        \texttt{bisect} &               &  \\
+        \texttt{median} &               &  \\
+        \texttt{middle} &               &  \\ \hline
     \end{tabular}
 \end{figure}
 
