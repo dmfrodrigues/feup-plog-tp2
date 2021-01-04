@@ -121,7 +121,10 @@ In this function we first consider the balance between students of even and odd 
 
 We then verify, but with lower priority, if the number of students in a class of a given subject is balanced in respect to the other classes of this subject.
 \begin{equation}
-    c_i = \frac{1}{2}\left(1-\frac{ClassSizeOdd}{ClassSizeEven}\right)^2 + \frac{1}{4}\left(1-\frac{ClassSize}{AvgClassSizeInSubject}\right)^2
+\begin{aligned}
+    c_i = & \frac{1}{10}\left(ClassSizeOdd - ClassSizeEven\right)^2 \\
+        + & \frac{1}{5} \left(ClassSize - AvgClassSizeInSubject\right)^2
+\end{aligned}
 \end{equation}
 
 In this function we also have in consideration the placement of each student, with a penalty based on the grade if a student is not placed in one of his/her options.
