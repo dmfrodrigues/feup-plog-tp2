@@ -68,8 +68,8 @@ number_of_odd_in_class(Class, [solution(_, _)|RSolution], N):-
     number_of_odd_in_class(Class, RSolution, N).
 
 class_size(_, [], 0).
-class_size(Class, [solution(_ID, Allocation)|T], N):-
-    member(Class, Allocation),
+class_size(class(_, ID, _), [solution(_ID, Allocation)|T], N):-
+    member(ID, Allocation),
     class_size(Class, T, N1),
     N is N1 + 1.
 class_size(Class, [solution(_ID, _Allocation)|T], N):-
