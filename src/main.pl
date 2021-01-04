@@ -99,7 +99,7 @@ evaluate_classes(AllClasses, [Class|T], Solution, Value):-
 
     NValue1 is 0.1*(Odds-Evens)**2 + 0.25*(1-Y)**2,
 
-    evaluate_classes(T, Solution, NValue2),
+    evaluate_classes(AllClasses, T, Solution, NValue2),
     Value is NValue1 + NValue2.
 
 options_in_allocation([Option|T], Allocation):-
@@ -128,8 +128,8 @@ evaluate_allocation([Student|T], Solution, Value):-
 
 evaluate(Classes, Students, Solution, Value):-
     evaluate_classes(Classes, Classes, Solution, C),
-    evaluate_allocation(Students, Solution, S),
-    Value is C + S
+    % evaluate_allocation(Students, Solution, S),
+    Value is C
     .
 
 get_vars([], []) :- !.
