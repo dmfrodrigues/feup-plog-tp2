@@ -137,7 +137,7 @@ evaluate_allocation([Student|T], Solution, Value):-
 evaluate(Classes, Students, Solution, Value):-
     evaluate_classes(Classes, Classes, Solution, C),
     evaluate_allocation(Students, Solution, S),
-    Value is C
+    Value is C + S
     .
 
 get_vars([], []) :- !.
