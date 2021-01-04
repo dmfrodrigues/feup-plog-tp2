@@ -4,7 +4,8 @@
 :-
     reconsult('declare_and_domains.pl'),
     reconsult('restrictions.pl'),
-    reconsult('generate.pl').
+    reconsult('generate.pl'),
+    reconsult('../stats/stats.pl').
 
 %   class(S, C, Times)
 % Subject S has a class C which is lectured in the
@@ -33,19 +34,19 @@
 % Finds a solution for the given Subjects and Students.
 solve(Classes, Students, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
-    get_vars(Solution, Vars),
+    get_vars(Solution, Vars), write(Vars), nl,
     format("Got vars~n", []),
-    write(Vars), nl,
+    % write(Vars), nl,
     format("Going to restrict~n", []),
     restrict(Classes, Students, Solution),
     format("Restricted~n", []),
     write(Vars), nl,
     evaluate(Classes, Students, Solution, Value),
     format("About to label~n", []),
-    write(Vars),nl,
-    write(Value),nl,
-    minimize(labeling([best], Vars), Value),
-    write(Value), nl,
+    % write(Vars),nl,
+    % write(Value),nl,
+    labeling([best, minimize(Value)], Vars),
+    % write(Value), nl,
     true.
 
 number_of_even_in_class(_Class, [], 0).
