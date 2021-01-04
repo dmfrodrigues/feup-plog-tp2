@@ -13,6 +13,9 @@
 
 \usepackage[binary-units=true]{siunitx} %SI units
 
+\usepackage{amsmath}
+\usepackage{amssymb}
+
 \begin{document}
 \title{TuCoTuTeCo}
 \subtitle{Allocating students to classes during COVID-19}
@@ -116,9 +119,11 @@ In case this is not possible, we choose the option where the ratio between odd a
 
 We then verify, but with lower priority, if the number of students in a class of given subject is balanced in respect to the other classes of this subject.
 
-\begin{equation}
-    \frac{1}{2}\left(1-\left(\frac{SumOdd}{SumEven}\right)^2\right) + \frac{1}{4}\left(1-\left(\frac{SumClass}{AvgSubject}\right)^2\right)
-\end{equation}
+\begin{gather}
+    c_i = \frac{1}{2}\left(1-\left(\frac{SumOdd}{SumEven}\right)^2\right) + \frac{1}{4}\left(1-\left(\frac{SumClass}{AvgSubject}\right)^2\right) \\
+    s_i = ? \\
+    O = \sum{c_i} + \sum{s_i}
+\end{gather}
 
 \section{Solution presentation}
 
