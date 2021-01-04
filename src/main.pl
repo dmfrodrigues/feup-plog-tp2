@@ -93,13 +93,11 @@ evaluate_classes(AllClasses, [Class|T], Solution, Value):-
     number_of_odd_in_class(ID, Solution, Odds),
     number_of_even_in_class(ID, Solution, Evens),
     format("~d, ~d ~d~n", [ID, Evens, Odds]),
-    X is Odds/Evens,
-
     class_size(Class, Solution, ClassSize),
     avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
     Y is ClassSize/Average,
 
-    NValue1 is 0.5*(1-X)**2 + 0.25*(1-Y)**2,
+    NValue1 is 0.1*(Odds-Evens)**2 + 0.25*(1-Y)**2,
 
     evaluate_classes(T, Solution, NValue2),
     Value is NValue1 + NValue2.
