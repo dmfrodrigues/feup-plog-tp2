@@ -90,7 +90,7 @@ evaluate_classes([Class|T], Solution, Value):-
     Class = class(Subject, ID, _),
     number_of_odd_in_class(Class, Solution, Odds),
     number_of_even_in_class(Class, Solution, Evens),
-    X is Odds/evens,
+    X is Odds/Evens,
     class_size(Class, Solution, ClassSize),
     avg_class_size_in_subject(Classes, Subject, Solution, Average),
     Y is ClassSize/Average,
