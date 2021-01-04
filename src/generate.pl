@@ -22,7 +22,7 @@ generate_students(Classes, NStudents, [student(ID, Grade, Subjects, Options)|T])
     random(3, 6, NOptions),
     findAllSubjects(Classes, TotalSubjects),
     generate_subjects(TotalSubjects, NSubjects, Subjects),
-    generate_options(Subjects, NOptions, Options),
+    generate_options(Classes, Subjects, NOptions, Options),
     N1 is NStudents - 1,
     generate_students(Classes, N1, T).
 
@@ -39,16 +39,24 @@ generate_subjects(Subjects, NSubjects, [Subject|T]):-
     N1 is NSubjects - 1,
     generate_subjects(RSubjects, N1, T).
 
+subject_classes([], _, []).
+subject_classes([class(Subject, Class, _)|T1], Subject, [Class|T2]):-
+    subject_classes(T1, Subject, T2).
+subject_classes([class(S, _C, _)|T1], Subject, Classes):-
+    S \= Subject,
+    subject_classes(T1, Subject, Classes).
 
-get_option(Classes, Subjects, Option):-
+get_option(_, [], []).
+get_option(Classes, [Subject|ST], [Class|OT]):-
+    subject_classes(Classes, Subject, SubjClasses),
+    random_member(Class, SubjClasses),
+    get_option(Classes, ST, OT).
 
-    .
-
-generate_options(_, 0, []):- !.
-generate_options(Subjects, NOptions, [Option|T]) :-
+generate_options(_, _, 0, []):- !.
+generate_options(Classes, Subjects, NOptions, [Option|T]) :-
     get_option(Classes, Subjects, Option),
     N1 is NOptions - 1,
-    generate_options(Subjects, N1, T).
+    generate_options(Classes, Subjects, N1, T).
 
 
 %generate_classes
