@@ -44,9 +44,7 @@ solve(Classes, Students, Solution) :-
     evaluate(Classes, Students, Solution, Value),
     format("About to label~n", []),
     write(Vars),nl,
-    % write(Value),nl,
-    labeling([best, minimize(Value)], Vars),
-    % write(Value), nl,
+    labeling([], Vars),
     true.
 
 number_of_even_in_class(_Class, [], 0).
