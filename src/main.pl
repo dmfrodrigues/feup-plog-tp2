@@ -105,7 +105,7 @@ evaluate_classes(AllClasses, [Class|T], Solution, Value):-
     avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
     Y is ClassSize/Average,
 
-    NValue1 is 0.1*(Odds-Evens)**2 + 0.25*(1-Y)**2,
+    NValue1 is 0.1*(Odds-Evens)**2 + 0.2*(1-Y)**2,
 
     evaluate_classes(AllClasses, T, Solution, NValue2),
     Value is NValue1 + NValue2.
