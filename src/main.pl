@@ -43,7 +43,7 @@ solve(Classes, Students, Solution) :-
     write(Vars), nl,
     evaluate(Classes, Students, Solution, Value),
     format("About to label~n", []),
-    % write(Vars),nl,
+    write(Vars),nl,
     % write(Value),nl,
     labeling([best, minimize(Value)], Vars),
     % write(Value), nl,
@@ -93,7 +93,7 @@ avg_class_size_in_subject(Classes, Subject, Solution, Average):-
     all_classes_of_subject(Classes, Subject, SubjectClasses),
     sum_classes(SubjectClasses, Solution, Sum),
     length(SubjectClasses, TotalSubjectClasses),
-    Average is Sum/TotalSubjectClasses
+    (TotalSubjectClasses == 0 -> Average is 0 ; Average is Sum/TotalSubjectClasses)
     .
 
 evaluate_classes(_AllClasses, [], _Solution, 0).
@@ -103,9 +103,9 @@ evaluate_classes(AllClasses, [Class|T], Solution, Value):-              format("
     number_of_even_in_class(ID, Solution, Evens),                       format("L103~n", []),
     class_size(Class, Solution, ClassSize),                             format("L104~n", []),
     avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
-    Y is ClassSize/Average,                                             format("L106~n", []),
+    
 
-    NValue1 is 0.1*(Odds-Evens)**2 + 0.2*(1-Y)**2,
+    NValue1 is 0.1*(Odds-Evens)**2 + 0.2*(ClassSize-Average)**2,
 
     evaluate_classes(AllClasses, T, Solution, NValue2),
     Value is NValue1 + NValue2,                                         format("L111~n", []).
