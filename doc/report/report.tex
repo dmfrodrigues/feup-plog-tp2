@@ -124,12 +124,12 @@ We then verify, but with lower priority, if the number of students in a class of
 In this function we also have in consideration the placement of each student, with a penalty based on the grade if a student is not placed in one of his/her options.
 \begin{equation}
     s_i = \frac{1}{8} \times \begin{cases}
-        +1 : \text{Student was allocated to one of his/her options} \\
-        -1 : \text{Student was not allocated to one of his/her options}
+        -1 : \text{Student was allocated to one of his/her options} \\
+        +1 : \text{Student was not allocated to one of his/her options}
     \end{cases}
 \end{equation}
 
-The final function is $O$, and it is made of the sum of penalties for each class $c_i$ and for each student $s_i$.
+The final function is $O$, and it is made of the sum of penalties for each class $c_i$ and for each student $s_i$. The objective is to minimize $O$.
 \begin{equation} 
     O = \sum_{i \in C}{c_i} + \sum_{i \in St}{s_i}
 \end{equation}
@@ -148,7 +148,23 @@ The solution array can be visualized by calling \texttt{write\_solution(+Solutio
 
 \subsection{Search strategies}
 
-We tested different options of search, changing the labelling parameters that controls the variables and solution selection in SICStus Prolog.
+We tested different search strategies, changing the labelling parameters that control variable and solution selection in SICStus Prolog.
+
+\begin{figure}
+    \centering
+    \begin{tabular}{l | l}
+        \hline
+        \textbf{Option} & \textbf{Remarks} \\ \hline
+        \texttt{leftmost} & \\
+        \texttt{min} & \\
+        \texttt{max} & \\
+        \texttt{ff} & \\
+        \texttt{anti\_first\_fail} & \\
+        \texttt{occurence} & \\
+        \texttt{ffc} & \\
+        \texttt{max\_regret} & \\ \hline
+    \end{tabular}
+\end{figure}
 
 \section{Conclusions and future work}
 
