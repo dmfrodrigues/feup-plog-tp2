@@ -44,7 +44,7 @@ solve(Classes, Students, Solution) :-
     write(Vars), nl,
     \+(ground(Vars)), \+(ground(Value)),
     format("L45~n", []),
-    labeling([], Vars),
+    labeling([minimize(Value)], Vars),
     format("L47~n", []),
     true.
 
