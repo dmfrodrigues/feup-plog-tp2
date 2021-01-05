@@ -135,7 +135,7 @@ For each ID in \texttt{student}, there should be a fact \texttt{grade} reporting
 
 \subsection{Decision variables}
 
-For each student and for each subject that student is enrolled, his class is outputted. The domain of the class is the set of classes a subject has as stated in facts using predicate \texttt{schedule}.
+For each student and for each subject that student is enrolled, his/her class is outputted. The domain of the class is the set of classes a subject has as stated in facts using predicate \texttt{schedule}.
 
 \subsection{Constraints}
 
@@ -156,7 +156,7 @@ For each student and for each subject that student is enrolled, his class is out
 
 \subsection{Evaluation function}
 
-In order to find the best solution to the problem, we defined which constraints have a higher priority for the final result.
+In order to find the best solution to the problem, we defined which soft constraints have a higher priority for the final result.
 
 In this function we first consider the balance between students of even and odd IDs. The optimal ratio is 1, but if it is not possible to pair each odd-numbered student with an even-numbered student the same condition still makes sure that classes too distant from that ratio are penalized by using a square function. 
 
@@ -286,7 +286,7 @@ Time complexity depends in an approximately linear way on the number of classes,
             width=110mm,
             grid=both,
             grid style={dashed,black!50},
-            xlabel={Number of subjects}, % Set the labels
+            xlabel={Number of classes}, % Set the labels
             xmin=3, xmax=14, xtick distance=1, %x tick label style={rotate=90},
             ylabel={Execution time ($\SI{}{\milli\second}$)},
             ymin=0, ymax=25000,
@@ -341,11 +341,11 @@ On the other hand, \texttt{ff}, \texttt{ffc} and \texttt{occurence} have by far 
 
 \section{Conclusions and future work}
 
-We developed a program that finds solutions to the presented student-class alocation problem, although it only performs decently for scenarios smaller than the usual dimension of this sort of problems (tens of subjects and classes, and hundreds of students), since our program only gives an answer in reasonable time when the number of subjects is of the order of the unit and the number of classes and students of the order of small tens.
+We developed a program that finds solutions to the presented student--class alocation problem, although it only performs decently for scenarios smaller than the usual dimension of this sort of problems (tens of subjects and classes, and hundreds of students), since our program only gives an answer in reasonable time when the number of subjects is of the order of the unit and the number of classes and students of the order of small tens.
 
-This program uses a cost function to evaluate how good a solution is (the larger the cost, the worst the solution); the objective is to find a solution that minimizes that cost function.
+This program uses hard restrictions and implements soft restrictions through a cost function to evaluate how good a solution is (the larger the cost, the worst the solution); the objective is to find a solution that minimizes that cost function.
 
-This work can be further improved by using custom heuristics and possibly an automaton.
+This work can be further improved by using custom heuristics and possibly an automaton to increase time performance.
 The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes.
 Also the maximum class size is hardcoded to 30.
 
