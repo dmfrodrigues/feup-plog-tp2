@@ -42,7 +42,9 @@ solve(Classes, Students, Solution) :-
     evaluate(Classes, Students, Solution, Value),
     format("About to label~n", []),
     write(Vars), nl,
+    format("L45~n", []),
     labeling([], Vars),
+    format("L47~n", []),
     true.
 
 number_of_even_in_class(_Class, [], N) :- N #= 0.
@@ -142,8 +144,8 @@ write_sol(solution(ID, [A|Allocation])) :-
         class(2, 5, [])
     ],
     Students = [
-        student(201800170, 17, [1,2], [[2, 3], [1, 4], [1, 3]]),
-        student(201806429, 18, [1,2], [[1, 4], [2, 5], [1, 5]])
+        student(201800170, 17, [1,2], [[2, 3], [2, 4], [2, 5]]),
+        student(201806429, 18, [1,2], [[1, 3], [1, 4], [1, 5]])
     ],
     % generate(10, 50, 150, Classes, Students),
     solve(Classes, Students, Solution),
