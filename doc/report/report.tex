@@ -51,7 +51,7 @@
 \usepackage{amssymb}
 
 \begin{document}
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.1}
 \setlength\tabcolsep{5pt}
 
 \title{TuCoTuTeCo}
@@ -159,14 +159,14 @@ In this function we first consider the balance between students of even and odd 
 We then verify, but with lower priority, if the number of students in a class of a given subject is balanced in respect to the other classes of this subject.
 \begin{equation}
 \begin{aligned}
-    c_i = & 1 \times \left(ClassSizeOdd - ClassSizeEven\right)^2 \\
-        + & 2 \times \left(ClassSize - AvgClassSizeInSubject\right)^2
+    c_i = & 3 \times \left(ClassSizeOdd - ClassSizeEven\right)^2 \\
+        + & 5 \times \left(ClassSize - AvgClassSizeInSubject\right)^2
 \end{aligned}
 \end{equation}
 
 In this function we also have in consideration the placement of each student, with a penalty based on the grade if a student is not placed in one of his/her options.
 \begin{equation}
-    s_i = 1 \times \begin{cases}
+    s_i = g^i \times \begin{cases}
         -1 : \text{Student was allocated to one of his/her options} \\
         +1 : \text{Student was not allocated to one of his/her options}
     \end{cases}
@@ -221,7 +221,7 @@ Time complexity depends in an approximately linear way on the number of classes,
             ytick distance=5000,
             minor y tick num = 1,
         ]
-            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis.csv};
+            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis-students.csv};
         \end{axis}
         \begin{axis}[
             axis y line*=right,
@@ -236,7 +236,7 @@ Time complexity depends in an approximately linear way on the number of classes,
             ymin=0.99999, ymax=100000,
             ytick distance=10,
         ]
-            \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis.csv};
+            \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis-students.csv};
         \end{axis}
     \end{tikzpicture}
     \caption{Execution time plotted against number of students (blue in left axis, red in right). The number of subjects and classes were kept constant, at 2 and 5 respectively.}\label{fig:complexity-nstudents}
@@ -338,10 +338,10 @@ We developed a program that finds solutions to the presented student-class aloca
 This program uses a cost function to evaluate how good a solution is (the larger the cost, the worst the solution); the objective is to find a solution that minimizes that cost function.
 
 This work can be further improved by using custom heuristics and possibly an automaton.
+The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes.
+Also the maximum class size is hardcoded to 30.
 
-The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes. Also the maximum class size is hardcoded to 30.
-
-We did not implement some optional constraints due to deadline restrictions.
+The only constraints we did not implement were the two optional constraints, due to deadline restrictions.
 
 %
 % ---- Bibliography ----
