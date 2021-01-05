@@ -39,15 +39,13 @@ solve(Classes, Students, Solution) :-
     get_vars(Solution, Vars),
     format("Going to restrict~n", []),
     restrict(Classes, Students, Solution),
-    % format("Going to assign~n", []),
-    % nth1(1, Vars, 2), nth1(2, Vars, 3), nth1(3, Vars, 1), nth1(4, Vars, 3),
     format("Going to evaluate~n", []),
     evaluate(Classes, Students, Solution, Value),
     format("Going to label~n", []),
-    % \+(ground(Vars)), \+(ground(Value)),
+    \+(ground(Vars)), \+(ground(Value)),
     format("Vars  = ", []), write(Vars ), nl,
     format("Value = ", []), write(Value), nl,
-    labeling([minimize(Value)], Vars),
+    labeling([minimize(Value)], [Value|Vars]),
     format("Labelled~n", []),
     true.
 
