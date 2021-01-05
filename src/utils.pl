@@ -6,7 +6,7 @@ restrict_equal_arrays([X1|L1], [X2|L2], R) :-
     restrict_equal_arrays(L1, L2, R1),
     R #<=> ((X1 #= X2) #/\ R1).
 
-restrict_array_in_list_of_arrays(_, [], R) :- R #= 1.
+restrict_array_in_list_of_arrays(_, [], R) :- R #= 0.
 restrict_array_in_list_of_arrays(L, [L1|D], R) :-
     restrict_equal_arrays(L, L1, R1),
     restrict_array_in_list_of_arrays(L, D, R2),
@@ -16,6 +16,11 @@ restrict_domain([], _, _, R) :- R #= 1.
 restrict_domain([X|L], Min, Max, R) :-
     restrict_domain(L, Min, Max, R1),
     R #<=> (R1 #/\ (Min #=< X #/\ X #=< Max)).
+
+restrict_in_list(_, [], R) :- R #= 0.
+restrict_in_list(X, [X1|L], R) :-
+    restrict_in_list(X, L, R1),
+    R #<=> (X #= X1 #\/ R1 #= 1).
 
 count([], _, 0).
 count([E|Es], E, N) :- !,

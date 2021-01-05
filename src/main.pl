@@ -45,32 +45,25 @@ solve(Classes, Students, Solution) :-
     labeling([], Vars),
     true.
 
-number_of_even_in_class(_Class, [], 0).
+number_of_even_in_class(_Class, [], N) :- N #= 0.
 number_of_even_in_class(Class, [solution(ID, Allocation)|RSolution], N):-
-    member(Class, Allocation),
-    0 is mod(ID, 2),
+    restrict_in_list(Class, Allocation, R),
     number_of_even_in_class(Class, RSolution, N1),
-    N is N1 + 1.
+    N #= N1 + (R #= 1 #/\ mod(ID, 2) #= 0).
 number_of_even_in_class(Class, [solution(_, _)|RSolution], N):-
     number_of_even_in_class(Class, RSolution, N).
 
-number_of_odd_in_class(_Class, [], 0).
+number_of_odd_in_class(_Class, [], N) :- N #= 0.
 number_of_odd_in_class(Class, [solution(ID, Allocation)|RSolution], N):-
-    member(Class, Allocation),
-    1 is mod(ID, 2),
+    restrict_in_list(Class, Allocation, R),
     number_of_odd_in_class(Class, RSolution, N1),
-    N is N1 + 1.
-number_of_odd_in_class(Class, [solution(_, _)|RSolution], N):-
-    number_of_odd_in_class(Class, RSolution, N).
+    N #= N1 + (R #= 1 #/\ mod(ID, 2) #= 1).
 
-class_size(_, [], 0).
+class_size(_, [], N) :- N #= 0.
 class_size(class(_, ID, _), [solution(_ID, Allocation)|T], N):-
-    member(ID, Allocation),
+    restrict_in_list(ID, Allocation, R),
     class_size(Class, T, N1),
-    N is N1 + 1.
-class_size(Class, [solution(_ID, _Allocation)|T], N):-
-    class_size(Class, T, N).
-
+    N #= N1 + (R #= 1).
 
 all_classes_of_subject([], _, []).
 all_classes_of_subject([class(Subject, Class, _)|T1], Subject, [Class|T2]):-
@@ -92,49 +85,34 @@ avg_class_size_in_subject(Classes, Subject, Solution, Average):-
     (TotalSubjectClasses == 0 -> Average is 0 ; Average is Sum/TotalSubjectClasses)
     .
 
-evaluate_classes(_AllClasses, [], _Solution, 0).
+evaluate_classes(_AllClasses, [], _Solution, Value) :- Value #= 0.
 evaluate_classes(AllClasses, [Class|T], Solution, Value):-
     Class = class(Subject, ID, _),
-    number_of_odd_in_class(ID, Solution, Odds),                         
-    number_of_even_in_class(ID, Solution, Evens),                      
-    class_size(Class, Solution, ClassSize),                           
+    number_of_odd_in_class(ID, Solution, Odds),
+    number_of_even_in_class(ID, Solution, Evens),
+    class_size(Class, Solution, ClassSize),
     avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
-    
 
-    NValue1 is 0.1*(Odds-Evens)**2 + 0.2*(ClassSize-Average)**2,
+    NValue1 #= 1*(Odds-Evens)*(Odds-Evens) + 2*(ClassSize-Average)*(ClassSize-Average),
 
     evaluate_classes(AllClasses, T, Solution, NValue2),
-    Value is NValue1 + NValue2.
+    Value #= NValue1 + NValue2.
 
-options_in_allocation([Option|T], Allocation):-
-    member(Option, Allocation).
-options_in_allocation([Option|T], Allocation):-
-    options_in_allocation(T, Allocation).
+check_allocation(student(ID, _Grade, _Subjects, Options), Solution, R):-
+    findall(solution(ID, A), member(solution(ID, Allocation), Solution), [solution(ID, Allocation)]),
+    restrict_array_in_list_of_arrays(Allocation, Options, R).
 
-check_allocation(student(ID1, _G, _S, Options), [solution(ID2, _Allocation)|T]):-
-    ID1 \= ID2,
-    check_allocation(student(ID1, _G, _S, Options), T).
-check_allocation(student(ID, _G, _S, Options), [solution(ID, Allocation)|_T]):-
-    !,
-    options_in_allocation(Options, Allocation)
-    .
-
-evaluate_allocation([], _, 0).
+evaluate_allocation([], _, Value) :- Value #= 0.
 evaluate_allocation([Student|T], Solution, Value):-
-    (
-    (check_allocation(Student, Solution)) -> 
-        S is 1; S is -1
-    ),
-    NValue1 is 0.125*S,
+    check_allocation(Student, Solution, R),
+    NValue1 #= 1*(1-2*R),
     evaluate_allocation(T, Solution, NValue2),
-    Value is NValue1 + NValue2
-    .
+    Value #= NValue1 + NValue2.
 
-evaluate(Classes, Students, Solution, Value):-          
-    evaluate_classes(Classes, Classes, Solution, C),    
-    evaluate_allocation(Students, Solution, S),
-    Value is C + S
-    .
+evaluate(Classes, Students, Solution, Value):-          get_vars(Solution, Vars),   format("L125, ", []), write(Vars), nl,
+    evaluate_classes(Classes, Classes, Solution, C),                                format("L126, ", []), write(Vars), format(", ", []), write(C), nl,
+    evaluate_allocation(Students, Solution, S),                                     format("L127, ", []), write(Vars), format(", ", []), write(S), nl,
+    Value #= C + S.
 
 get_vars([], []) :- !.
 get_vars([solution(_, Vars1)|Solution], Vars) :-
