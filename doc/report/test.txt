@@ -1,0 +1,4 @@
+Value=12
+Student ID     Class of 1st subject     Class of 2nd subject     ...
+201800170      1                        3                        
+201806429      1                        4                        

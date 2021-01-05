@@ -30,6 +30,23 @@
   round-precision     = 2,
 }
 
+% Source code and algorithms
+%\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{listings}
+\lstset{
+	basicstyle=\linespread{0.85}\ttfamily\small,
+	basewidth  = {0.50em,1em},
+    frame=tbr, % draw frame at top and bottom of the code
+    tabsize=4, % tab space width
+    numbers=left, % display line numbers on the left
+	showstringspaces=false, % don't mark spaces in strings    
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+	stringstyle=\color{red} % string color
+}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 
@@ -166,7 +183,9 @@ Predicate \texttt{solve(+Classes, +Students, -Solution)} should be called with t
 
 \texttt{Classes} is an array of structures \texttt{class(Subject, Class, TimeSlots)} and \texttt{Students} is an array of structures \texttt{student(ID, Grade, [Option1, Option2, ...])}. Solution is an array of structures \texttt{solution(ID, Allocation)} where \texttt{Allocation} is the schedule that student with a certain \texttt{ID} was allocated (ideally it is equal to one of the student's options, otherwise it is empty or has an allocation different from all the student's options).
 
-The solution array can be visualized by calling \texttt{write\_solution(+Solution)}.
+The solution array can be visualized by calling \texttt{write\_solution(+Solution)}. A complete run can be made by calling \texttt{sicstus -l test.pl}, which gives the following output:
+
+\lstinputlisting[caption={Sample output (\texttt{test.txt})}]{test.txt}
 
 \section{Experiments and results}
 
@@ -184,12 +203,14 @@ Time complexity depends in an approximately exponential way on the number of sub
 
 Time complexity depends in an approximately linear way on the number of classes, as the logarithm of the execution time first increases and then stabilizes, and the linearly-plotted execution time keeps increasing at a reasonably linear rate, Figure \ref{fig:complexity-nsubjects}.
 
+\newpage
+
 \begin{figure}[!h]
 	\centering
 	\begin{tikzpicture}[baseline]
         \footnotesize
         \begin{axis}[
-            height=52mm,
+            height=54mm,
             width=110mm,
             grid=both,
             grid style={dashed,black!50},
@@ -206,7 +227,7 @@ Time complexity depends in an approximately linear way on the number of classes,
             axis y line*=right,
             ymode=log,
             axis x line=none,
-            height=52mm,
+            height=54mm,
             width=110mm,
             grid=major,
             grid style={dashed,black!50},
@@ -219,14 +240,11 @@ Time complexity depends in an approximately linear way on the number of classes,
         \end{axis}
     \end{tikzpicture}
     \caption{Execution time plotted against number of students (blue in left axis, red in right). The number of subjects and classes were kept constant, at 2 and 5 respectively.}\label{fig:complexity-nstudents}
-\end{figure}
 
-\begin{figure}[!h]
-	\centering
 	\begin{tikzpicture}[baseline]
         \footnotesize
         \begin{axis}[
-            height=52mm,
+            height=54mm,
             width=110mm,
             grid=both,
             grid style={dashed,black!50},
@@ -243,7 +261,7 @@ Time complexity depends in an approximately linear way on the number of classes,
             axis y line*=right,
             ymode=log,
             axis x line=none,
-            height=52mm,
+            height=54mm,
             width=110mm,
             grid=major,
             grid style={dashed,black!50},
@@ -256,14 +274,11 @@ Time complexity depends in an approximately linear way on the number of classes,
         \end{axis}
     \end{tikzpicture}
     \caption{Execution time plotted against number of subjects, two classes per subject (blue in left axis, red in right). The number of students was kept constant at 9.}\label{fig:complexity-nsubjects}
-\end{figure}
 
-\begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}[baseline]
+    \begin{tikzpicture}[baseline]
         \footnotesize
         \begin{axis}[
-            height=52mm,
+            height=54mm,
             width=110mm,
             grid=both,
             grid style={dashed,black!50},
@@ -280,7 +295,7 @@ Time complexity depends in an approximately linear way on the number of classes,
             axis y line*=right,
             ymode=log,
             axis x line=none,
-            height=52mm,
+            height=54mm,
             width=110mm,
             grid=major,
             grid style={dashed,black!50},
@@ -318,13 +333,15 @@ We tested all possible combinations of variable ordering and value selection opt
 
 \section{Conclusions and future work}
 
-We developed a program to generate solutions to the presented student-class alocation problem.
+We developed a program that finds solutions to the presented student-class alocation problem, although it only performs decently for scenarios smaller than the usual dimension of this sort of problems (tens of subjects and classes, and hundreds of students), since our program only gives an answer in reasonable time when the number of subjects is of the order of the unit and the number of classes and students of the order of small tens.
 
-This work can be further improved by using better heuristics and possibly an automaton.
+This program uses a cost function to evaluate how good a solution is (the larger the cost, the worst the solution); the objective is to find a solution that minimizes that cost function.
 
-The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes. Also randomly generated instances enroll each student in exactly 5 subjects, where in practice a student is enrolled in 4-6 subjects each semester, and the maximum class size is hardcoded to 30.
+This work can be further improved by using custom heuristics and possibly an automaton.
 
-We did not implement some of the optional constraints due to deadline restrictions and technical difficulties due to the complexity of the constraints.
+The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes. Also the maximum class size is hardcoded to 30.
+
+We did not implement some optional constraints due to deadline restrictions.
 
 %
 % ---- Bibliography ----
