@@ -32,6 +32,9 @@
 \usepackage{amssymb}
 
 \begin{document}
+\renewcommand{\arraystretch}{1.2}
+\setlength\tabcolsep{5pt}
+
 \title{TuCoTuTeCo}
 \subtitle{Allocating students to classes during COVID-19}
 %
@@ -171,22 +174,22 @@ No practical experiments on dimensional analysis or search strategies could be p
 
 Time complexity is expected to depend linearly on the number of students.
 
-\begin{figure}[!h]
+\begin{table}[!h]
     \centering
     \caption{Expected results for different ordering options}
-    \begin{tabular}{l | l}
+    \begin{tabular}{| l | r r r r r |}
         \hline
-        \textbf{Option}            & \textbf{Remarks}                                       \\ \hline
-        \texttt{leftmost}          & Indifferent, as variables do not have a specific order \\
-        \texttt{min}               & Indifferent, as variables do not have a specific order \\
-        \texttt{max}               & Indifferent, as variables do not have a specific order \\
-        \texttt{ff}                & May be a bit faster                                    \\
-        \texttt{anti\_first\_fail} & May be a bit slower                                    \\
-        \texttt{occurence}         & May be a bit faster in a constrain and test system     \\
-        \texttt{ffc}               & May be a bit faster                                    \\
-        \texttt{max\_regret}       & - \\ \hline
+        \textbf{Order \textbackslash Value selection}& \texttt{step}              & \texttt{enum}              & \texttt{bisect}            & \texttt{median}             & \texttt{middle}            \\ \hline
+        \texttt{leftmost}                            & $\SI{5533}{\milli\second}$ & $\SI{5529}{\milli\second}$ & $\SI{5504}{\milli\second}$ & $\SI{ 8598}{\milli\second}$ & $\SI{8516}{\milli\second}$ \\
+        \texttt{min}                                 & $\SI{ 653}{\milli\second}$ & $\SI{6691}{\milli\second}$ & $\SI{ 548}{\milli\second}$ & $\SI{ 9392}{\milli\second}$ & $\SI{9402}{\milli\second}$ \\
+        \texttt{max}                                 & $\SI{1835}{\milli\second}$ & $\SI{1969}{\milli\second}$ & $\SI{2066}{\milli\second}$ & $\SI{ 3828}{\milli\second}$ & $\SI{3837}{\milli\second}$ \\
+        \texttt{ff}                                  & $\SI{ 169}{\milli\second}$ & $\SI{ 172}{\milli\second}$ & $\SI{ 161}{\milli\second}$ & $\SI{  161}{\milli\second}$ & $\SI{ 157}{\milli\second}$ \\
+        \texttt{anti\_first\_fail}                   & $\SI{7761}{\milli\second}$ & $\SI{6792}{\milli\second}$ & $\SI{8060}{\milli\second}$ & $\SI{10065}{\milli\second}$ & $\SI{9896}{\milli\second}$ \\
+        \texttt{occurence}                           & $\SI{ 284}{\milli\second}$ & $\SI{ 238}{\milli\second}$ & $\SI{ 284}{\milli\second}$ & $\SI{  236}{\milli\second}$ & $\SI{ 232}{\milli\second}$ \\
+        \texttt{ffc}                                 & $\SI{ 130}{\milli\second}$ & $\SI{ 151}{\milli\second}$ & $\SI{ 134}{\milli\second}$ & $\SI{  132}{\milli\second}$ & $\SI{ 160}{\milli\second}$ \\
+        \texttt{max\_regret}                         & $\SI{5331}{\milli\second}$ & $\SI{5598}{\milli\second}$ & $\SI{5507}{\milli\second}$ & $\SI{ 8536}{\milli\second}$ & $\SI{8584}{\milli\second}$ \\ \hline
     \end{tabular}
-\end{figure}
+\end{table}
 
 \subsection{Search strategies}
 
@@ -202,8 +205,8 @@ Time complexity is expected to depend linearly on the number of students.
             xlabel={Number of students}, % Set the labels
             xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
             ylabel={Execution time ($\SI{}{\milli\second}$) [blue]},
-            ymin=0, ymax=20000,
-            ytick distance=10000,
+            ymin=0, ymax=25000,
+            ytick distance=5000,
             minor y tick num = 1,
         ]
             \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis.csv};
@@ -217,14 +220,14 @@ Time complexity is expected to depend linearly on the number of students.
             grid=major,
             grid style={dashed,black!50},
             xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
-            ylabel={Execution time, log-scale ($\SI{}{\milli\second}$) [red]},
-            ymin=10, ymax=1000000,
+            ylabel={Execution time, log-scale ($\SI{}{\milli\second}$) [red]}, ylabel style={rotate=-180},
+            ymin=0.99999, ymax=100000,
             ytick distance=10,
         ]
             \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis.csv};
         \end{axis}
     \end{tikzpicture}
-    \caption{Efficiency $S$ plotted against $R_e$ on the x-axis and $a$ on the y-axis. The value of $S$ in each point of the mesh is determined from the average $T$ of three repetitions}\label{fig:S_aRe}
+    \caption{Execution time plotted against number of students. The number of subjects and classes were kept constant, at 2 and 5 respectively.}
 \end{figure}
 
 \section{Conclusions and future work}
