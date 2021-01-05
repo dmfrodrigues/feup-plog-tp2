@@ -1,8 +1,8 @@
 print_statistics_header :-
-    format('Resumptions~27+,Entailments~12+,Prunings~9+,Backtracks~11+,Constraints~12+,Total_runtime (ms)~19+~n', []),
+    format('Resumptions~30+,Entailments~15+,Prunings~15+,Backtracks~15+,Constraints~15+,Total_runtime (ms)~25+~n', []),
     statistics(total_runtime, _).
 print_statistics_header(_) :-
-    format('Resumptions~27+,Entailments~12+,Prunings~9+,Backtracks~11+,Constraints~12+,Total_runtime (ms)~19+,Value~6+~n', []),
+    format('Resumptions~30+,Entailments~15+,Prunings~15+,Backtracks~15+,Constraints~15+,Total_runtime (ms)~25+,Value~10+~n', []),
     statistics(total_runtime, _).
 print_statistics :-
     fd_statistics(resumptions, Resumptions),
@@ -11,7 +11,7 @@ print_statistics :-
     fd_statistics(backtracks , Backtracks ),
     fd_statistics(constraints, Constraints),
     statistics(total_runtime, [_, Total_runtime]),
-    format('~d~27+,~d~12+,~d~9+,~d~11+,~d~12+,~d~14+~n', [Resumptions, Entailments, Prunings, Backtracks, Constraints, Total_runtime]).
+    format('~d~30+,~d~15+,~d~15+,~d~15+,~d~15+,~d~25+~n', [Resumptions, Entailments, Prunings, Backtracks, Constraints, Total_runtime]).
 print_statistics(Value) :-
     fd_statistics(resumptions, Resumptions),
     fd_statistics(entailments, Entailments),
@@ -19,4 +19,7 @@ print_statistics(Value) :-
     fd_statistics(backtracks , Backtracks ),
     fd_statistics(constraints, Constraints),
     statistics(total_runtime, [_, Total_runtime]),
-    format('~d~27+,~d~12+,~d~9+,~d~11+,~d~12+,~d~14+,~d~6+~n', [Resumptions, Entailments, Prunings, Backtracks, Constraints, Total_runtime]).
+    format('~d~30+,~d~15+,~d~15+,~d~15+,~d~15+,~d~25+,~d~10+~n', [Resumptions, Entailments, Prunings, Backtracks, Constraints, Total_runtime, Value]).
+
+repeatN(0, _) :- !.
+repeatN(N, T) :- T, N1 is N-1, repeatN(N1, T).
