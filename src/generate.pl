@@ -65,8 +65,7 @@ generate_options(Classes, Subjects, NOptions, [Option|T]) :-
 %generate_classes
 generate_classes(NSubjects, NClasses, Classes) :-
     get_random_sizes_adding_up(NSubjects, NClasses, Answer),
-    generate_classes_cycle(Answer, 1, 1, Classes),
-    write(Classes).
+    generate_classes_cycle(Answer, 1, 1, Classes).
 
 generate_classes_cycle([], _, _, []) :- !.
 generate_classes_cycle([0|Answer], S, C, Classes) :- !, S1 is S+1, generate_classes_cycle(Answer, S1, C, Classes).

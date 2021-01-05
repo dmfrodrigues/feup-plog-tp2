@@ -37,16 +37,16 @@
 solve(Classes, Students, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
     get_vars(Solution, Vars),
-    format("Going to restrict~n", []),
+    format(user_error, "Going to restrict~n", []),
     restrict(Classes, Students, Solution),
-    format("Going to evaluate~n", []),
+    format(user_error, "Going to evaluate~n", []),
     evaluate(Classes, Students, Solution, Value),
-    format("Going to label~n", []),
+    format(user_error, "Going to label~n", []),
     \+(ground(Vars)), \+(ground(Value)),
-    format("Vars  = ", []), write(Vars ), nl,
-    format("Value = ", []), write(Value), nl,
+    format(user_error, "Vars  = ", []), write(user_error, Vars ), nl,
+    format(user_error, "Value = ", []), write(user_error, Value), nl,
     labeling([minimize(Value)], [Value|Vars]),
-    format("Labelled~n", []),
+    format(user_error, "Labelled~n", []),
     true.
 
 get_vars([], []) :- !.
