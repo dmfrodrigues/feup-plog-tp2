@@ -4,6 +4,24 @@
 :-
     reconsult('utils.pl').
 
+evaluate(Classes, Students, Solution, Value):-
+    evaluate_classes(Classes, Classes, Solution, C),
+    evaluate_allocation(Students, Solution, S),
+    Value #= C + S.
+
+evaluate_classes(_AllClasses, [], _Solution, Value) :- Value #= 0.
+evaluate_classes(AllClasses, [Class|T], Solution, Value):-
+    Class = class(Subject, ID, _),
+    number_of_even_in_class(ID, Solution, Evens),
+    number_of_odd_in_class(ID, Solution, Odds),
+    class_size(Class, Solution, ClassSize),
+    avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
+
+    NValue1 #= 1*(Odds-Evens)*(Odds-Evens) + 2*(ClassSize-Average)*(ClassSize-Average),
+
+    evaluate_classes(AllClasses, T, Solution, NValue2),
+    Value #= NValue1 + NValue2.
+
 number_of_even_in_class(_Class, [], N) :- N #= 0.
 number_of_even_in_class(Class, [solution(ID, Allocation)|RSolution], N):-
     restrict_in_list(Class, Allocation, R),
@@ -28,8 +46,7 @@ all_classes_of_subject([], _, []).
 all_classes_of_subject([class(Subject, Class, _)|T1], Subject, [Class|T2]):-
     all_classes_of_subject(T1, Subject, T2).
 all_classes_of_subject([class(_S1, _Class, _)|T1], Subject, NClasses):-
-    all_classes_of_subject(T1, Subject, NClasses)
-    .
+    all_classes_of_subject(T1, Subject, NClasses).
 
 sum_classes([], _, 0).
 sum_classes([Class|T], Solution, Sum):-
@@ -41,25 +58,7 @@ avg_class_size_in_subject(Classes, Subject, Solution, Average):-
     all_classes_of_subject(Classes, Subject, SubjectClasses),
     sum_classes(SubjectClasses, Solution, Sum),
     length(SubjectClasses, TotalSubjectClasses),
-    (TotalSubjectClasses == 0 -> Average is 0 ; Average is Sum/TotalSubjectClasses)
-    .
-
-evaluate_classes(_AllClasses, [], _Solution, Value) :- Value #= 0.
-evaluate_classes(AllClasses, [Class|T], Solution, Value):-
-    Class = class(Subject, ID, _),
-    number_of_odd_in_class(ID, Solution, Odds),
-    number_of_even_in_class(ID, Solution, Evens),
-    class_size(Class, Solution, ClassSize),
-    avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
-
-    NValue1 #= 1*(Odds-Evens)*(Odds-Evens) + 2*(ClassSize-Average)*(ClassSize-Average),
-
-    evaluate_classes(AllClasses, T, Solution, NValue2),
-    Value #= NValue1 + NValue2.
-
-check_allocation(student(ID, _Grade, _Subjects, Options), Solution, R):-
-    findall(solution(ID, A), member(solution(ID, Allocation), Solution), [solution(ID, Allocation)]),
-    restrict_array_in_list_of_arrays(Allocation, Options, R).
+    (TotalSubjectClasses == 0 -> Average is 0 ; Average is Sum/TotalSubjectClasses).
 
 evaluate_allocation([], _, Value) :- Value #= 0.
 evaluate_allocation([Student|T], Solution, Value):-
@@ -68,7 +67,6 @@ evaluate_allocation([Student|T], Solution, Value):-
     evaluate_allocation(T, Solution, NValue2),
     Value #= NValue1 + NValue2.
 
-evaluate(Classes, Students, Solution, Value):-
-    evaluate_classes(Classes, Classes, Solution, C),
-    evaluate_allocation(Students, Solution, S),
-    Value #= C + S.
+check_allocation(student(ID, _Grade, _Subjects, Options), Solution, R):-
+    findall(solution(ID, A), member(solution(ID, Allocation), Solution), [solution(ID, Allocation)]),
+    restrict_array_in_list_of_arrays(Allocation, Options, R).
