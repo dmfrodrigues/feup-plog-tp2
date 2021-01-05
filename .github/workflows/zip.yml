@@ -1,26 +1,17 @@
-name: Reports release
+name: zip
 
 on:
   push:
-    tags:
-      - 'tp*'
-      - 'v*'
-
+    branches: [ master , dev ]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
-    - name: Set version
-      run: echo ::set-env name=VERSION::${GITHUB_REF#refs/*/}
-
-    - name: Checkout right version
-      run: git checkout $(git rev-list -n 1 $VERSION)
-
     - name: Install latex and related packages
-      run: sudo apt install -y latexmk texlive-latex-extra texlive-science
-
+      run: |
+        sudo apt update
+        sudo apt install -y texlive-latex-extra texlive-science latexmk curl
     - name: Checkout submodules
       shell: bash
       run: |
@@ -29,11 +20,11 @@ jobs:
         auth_header="$(git config --local --get http.https://github.com/.extraheader)"
         git submodule sync --recursive
         git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-    - name: report
+    - name: zip
       run: |
-        make -C doc/report report.pdf VERSION=${VERSION:1:100}
-    - name: Upload report
+        make PLOG_TP2_T2_TeCoTuTeCo4.zip
+    - name: Upload zip
       uses: actions/upload-artifact@v2
       with:
-        name: report.pdf
-        path: doc/report/report.pdf
+        name: PLOG_TP2_T2_TeCoTuTeCo4.zip
+        path: PLOG_TP2_T2_TeCoTuTeCo4.zip

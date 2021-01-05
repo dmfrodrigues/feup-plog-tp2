@@ -1,4 +1,4 @@
-name: Compile report
+name: report
 
 on:
   push:
