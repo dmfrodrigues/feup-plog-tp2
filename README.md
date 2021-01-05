@@ -7,6 +7,9 @@ Distributed under the terms of the GNU General Public License, version 3
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+![report](https://github.com/dmfrodrigues/feup-plog-tp2/workflows/report/badge.svg)
+![zip](https://github.com/dmfrodrigues/feup-plog-tp2/workflows/zip/badge.svg)
+
 - **Project name:** TeCoTuTeCo - ​Te​cnologia de ​Co​locação em ​Tu​rmas em ​Te​mpos de ​Co​vid (Class Allocation Technology in Covid Times)
 - **Short description:** Program to allocate students to classes, satisfying several restrictions imposed by common sense and by the pandemic situation
 - **Environment:** SICStus Prolog
