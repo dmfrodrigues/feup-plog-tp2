@@ -68,5 +68,5 @@ evaluate_allocation([Student|T], Solution, Value):-
     Value #= NValue1 + NValue2.
 
 check_allocation(student(ID, _Grade, _Subjects, Options), Solution, R):-
-    findall(solution(ID, A), member(solution(ID, Allocation), Solution), [solution(ID, Allocation)]),
+    findall(solution(ID, A), member(solution(ID, A), Solution), [solution(ID, Allocation)]),
     restrict_array_in_list_of_arrays(Allocation, Options, R).
