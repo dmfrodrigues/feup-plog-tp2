@@ -1,0 +1,32 @@
+:-
+    reconsult('../src/main.pl').
+
+:-
+    generate(2, 5,  1, Classes01, Students01),
+    generate(2, 5,  2, Classes02, Students02),
+    generate(2, 5,  3, Classes03, Students03),
+    generate(2, 5,  4, Classes04, Students04),
+    generate(2, 5,  5, Classes05, Students05),
+    generate(2, 5,  6, Classes06, Students06),
+    generate(2, 5,  7, Classes07, Students07),
+    generate(2, 5,  8, Classes08, Students08),
+    generate(2, 5,  9, Classes09, Students09),
+    generate(2, 5, 10, Classes10, Students10),
+    generate(2, 5, 11, Classes11, Students11),
+    generate(2, 5, 12, Classes12, Students12),
+    generate(2, 5, 13, Classes13, Students13),
+    format('NStudents,', []),                                                                                                                              print_statistics_header(_),
+    format( '1,', []), solve(Classes01, Students01, [ff], _, Value01), solve(Classes01, Students01, [ff], _, _), solve(Classes01, Students01, [ff], _, _), print_statistics(Value01, 3),
+    format( '2,', []), solve(Classes02, Students02, [ff], _, Value02), solve(Classes02, Students02, [ff], _, _), solve(Classes02, Students02, [ff], _, _), print_statistics(Value02, 3),
+    format( '3,', []), solve(Classes03, Students03, [ff], _, Value03), solve(Classes03, Students03, [ff], _, _), solve(Classes03, Students03, [ff], _, _), print_statistics(Value03, 3),
+    format( '4,', []), solve(Classes04, Students04, [ff], _, Value04), solve(Classes04, Students04, [ff], _, _), solve(Classes04, Students04, [ff], _, _), print_statistics(Value04, 3),
+    format( '5,', []), solve(Classes05, Students05, [ff], _, Value05), solve(Classes05, Students05, [ff], _, _), solve(Classes05, Students05, [ff], _, _), print_statistics(Value05, 3),
+    format( '6,', []), solve(Classes06, Students06, [ff], _, Value06), solve(Classes06, Students06, [ff], _, _), solve(Classes06, Students06, [ff], _, _), print_statistics(Value06, 3),
+    format( '7,', []), solve(Classes07, Students07, [ff], _, Value07), solve(Classes07, Students07, [ff], _, _), solve(Classes07, Students07, [ff], _, _), print_statistics(Value07, 3),
+    format( '8,', []), solve(Classes08, Students08, [ff], _, Value08), solve(Classes08, Students08, [ff], _, _), solve(Classes08, Students08, [ff], _, _), print_statistics(Value08, 3),
+    format( '9,', []), solve(Classes09, Students09, [ff], _, Value09), solve(Classes09, Students09, [ff], _, _), solve(Classes09, Students09, [ff], _, _), print_statistics(Value09, 3),
+    format('10,', []), solve(Classes10, Students10, [ff], _, Value10), solve(Classes10, Students10, [ff], _, _), solve(Classes10, Students10, [ff], _, _), print_statistics(Value10, 3),
+    format('11,', []), solve(Classes11, Students11, [ff], _, Value11), solve(Classes11, Students11, [ff], _, _), solve(Classes11, Students11, [ff], _, _), print_statistics(Value11, 3),
+    format('12,', []), solve(Classes12, Students12, [ff], _, Value12), solve(Classes12, Students12, [ff], _, _), solve(Classes12, Students12, [ff], _, _), print_statistics(Value12, 3),
+    % format('13,', []), solve(Classes13, Students13, [ff], _, Value13), solve(Classes13, Students13, [ff], _, _), solve(Classes13, Students13, [ff], _, _), print_statistics(Value13, 3),
+    true.

@@ -1,0 +1,363 @@
+% Copyright (C) 2020-2021 Diogo Rodrigues, Breno Pimentel
+% Distributed under the terms of the GNU General Public License, version 3
+
+\documentclass[runningheads]{llncs}
+
+\usepackage{graphicx}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following line
+% to display URLs in blue roman font according to Springer's eBook style:
+% \renewcommand\UrlFont{\color{blue}\rmfamily}
+
+% Graphics and images
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{automata, positioning, arrows}
+\usepackage[justification=centering,font=small,skip=0.5em]{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
+\usepackage{diagbox}
+
+\usepackage[binary-units=true]{siunitx} %SI units
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest} % Allows to place the legend below plot
+\usepgfplotslibrary{units} % Allows to enter the units nicely
+\sisetup{
+  round-mode          = places,
+  round-precision     = 2,
+}
+
+% Source code and algorithms
+%\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{listings}
+\lstset{
+	basicstyle=\linespread{0.85}\ttfamily\small,
+	basewidth  = {0.50em,1em},
+    frame=tbr, % draw frame at top and bottom of the code
+    tabsize=4, % tab space width
+    numbers=left, % display line numbers on the left
+	showstringspaces=false, % don't mark spaces in strings    
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+	stringstyle=\color{red} % string color
+}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\renewcommand{\arraystretch}{1.1}
+\setlength\tabcolsep{5pt}
+
+\title{Constraint optimization problem approach to student-class allocation during COVID-19 pandemic using SICStus Prolog}
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+\author{
+Diogo Miguel Ferreira Rodrigues (\email{diogo.rodrigues@fe.up.pt}),\\
+Breno Accioly de Barros Pimentel (\email{up201800170@fe.up.pt})
+}
+
+\authorrunning{D. Rodrigues and B. Pimentel}
+
+\institute{
+Faculty of Engineering -- University of Porto, Portugal\\
+PLOG -- Class 3MIEIC02, Group TuCoTuTeCo\_4
+}
+%
+\maketitle              % typeset the header of the contribution
+%
+\begin{abstract}
+Due to the pandemic situation caused by COVID-19, educational institutions are forced to adopt new methods to allocate students to classes on subjects they are enrolled. This is reflected in the additional set of restrictions enforced by health authorities about room area and capacity for instance. In this paper we present a practical approach to solving instances of the student-class allocation problem with additional constraints by implementing and analysing a solution using the Prolog programming language to approach this problem as a generic constraint optimization problem (COP).
+
+\keywords{
+COP \and
+CLP \and
+Optimization \and
+Student-class allocation \and
+Prolog \and
+COVID-19}
+\end{abstract}
+
+\section{Introduction}
+
+Student--class allocation is a routine problem for educational institutions, and is usually solved as a constrainted resource allocation problem where classes are the resources, the agents are the students and subject to constraints such as a student not having overlapping classes of different subjects and balancing class sizes.
+However, as a result of the COVID-19 pandemic, further constraints must be applied to increase physical distancing and reduce the number of contacts, such as more strongly enforcing class balancing, and also balancing the number of students with even and odd ID number in a class so students with even and odd IDs can have presential classes in alternating weeks.
+
+The student--class allocation problem is a well-known problem, with space for more abstract and theoretical considerations \cite{abraham07} or otherwise more practical approaches using more sophisticated methods such as Multiagent Resource Allocation (MARA), where agents (usually students with different preferences) compete to shape the solution into one that benefits them the most and as such globally optimize the solution \cite{cano09}. We will add to this knowledge base by investigating how a student--class allocation problem with additional restrictions can be solved using a logic programming environment.
+
+We will take a very practical approach without neglecting any theoretical considerations that might be required to solve the problem; we will model this problem as a constraint optimization problem (COP) with a set of soft and hard constraints, and provide it with an evaluation function that should be optimized.
+We encoded the problem as a Prolog program using SICStus Prolog \cite{sicstus} and the constraint logic programming (CLP) module \texttt{clpfd} (\textit{CLP over Finite Domains}), with an interface to solve an instance of the problem.
+We then generate a set of different scenarios with varying dimensions to analyse the time complexity of the solution and the effect of using different search strategies.
+Finally we present the results of our experiments.
+
+\section{Problem description}
+
+Consider an educational institution which lectures $|S|$ subjects numbered $s=1, 2, ... , |S|$ ($S = \{1, 2, ..., |S|\}$ is the set of subjects), where subject $s$ has $|C^s|$ classes in the set of its classes $C^s$ (the number of each class among all classes of all subjects is unique; $C$ is the set of all classes).
+
+That institution has a set $St$ of students with ID $i$, and for each student it is known his average grade from past school years $0 \leq g^i \leq 20$, the subjects he is enrolled in subjects sequence $S^i = \langle S^i_1, S^i_2, ..., S^i_{|S^i|} \rangle$, $S^i_k \in S$ and his chosen schedule options $O^i = \{o^i_1, o^i_2, ..., o^i_{|S^i|}\}$ where $3 \geq N_i \geq 6$ is the number of schedule options the student chose, and $o^i_j$ is the $j$-th option of student $i$, where an option is $o^i_j = \langle c^i_{j, 1}, c^i_{j, 2}, ..., {c^i_{j, |S_i|}} \rangle$, where $c^i_{j,k}$ is the class student $i$ selected for his/her $j$-th option and subject $S^i_k$.
+
+$O^i = \langle o^i_1, o^i_2, ..., o^i_{|S^i|} \rangle$ can otherwise be a sequence of options, where student $i$'s preferred option is $o^i_1$ and his/her least preferred option is $o^i_ {|S^i|}$.
+
+The solution is, for each student $i$, an empty schedule $a^i=\langle \rangle$ if he/she was not allocated, or the allocated schedule $a^i = \langle a^i_1, a^i_2, ..., a^i_{|S_i|} \rangle$ if he was allocated.
+
+The restrictions are as follows:
+\begin{enumerate}
+    \item Students must be placed in decreasing order of their grades.
+    \item A student must be either allocated to a schedule (may it be one of his/her options or not), or not allocated to any of his/her subjects.
+    \item (\textit{Optional}) A student does not have overlapping classes of different subjects.
+    \item The number of students per class in a subject must be close to the average number of students per class in that subject.
+    \item The ratio of odd-numbered students to even-numbered students in the classes of a subject should be balanced (i.e., close to 1, or close to the odd-even ratio for that subject).
+    \item (\textit{Optional}) Students should be allocated preferrably to their first options when possible.
+\end{enumerate}
+
+\newpage
+
+\section{Approach}
+
+\subsection{Data}
+
+The input data is made of:
+\begin{enumerate}
+    \item An array of structures \texttt{class(Subject, Class, Time)}, which means class \texttt{Class} of subject \texttt{Subject} is attending a lecture at time \texttt{Time}. To simplify without loss of generality, subjects are numbered sequentially starting in 1, classes of a subject are numbered sequentially starting in 1, and time is an integer representing a time slot (for instance, time can be divided into $\SI{30}{\minute}$ slots where the first slot is on Monday from 00:00 to 00:30). This representation of time is merely a convenient way to understand time, as the only thing that matters is the boolean relation that states if two subject-class pairs overlap.
+    \item An array of structures \texttt{student(ID, Grade, Subjects, Options)}, which means student with ID \texttt{ID} has average grade \texttt{Grade} is enrolled in the subjects \texttt{Subjects} which is a list, and has chosen the options  \texttt{Options} which is a list of 3 to 6 schedule options, with each element being a list of the same size as \texttt{Subjects} containing the classes chosen for the respective option.
+    \item Fact using the predicate \texttt{capacity(Capacity)}, where \texttt{Capacity} means the maximum size of a class.
+\end{enumerate}
+
+For each ID in \texttt{student}, there should be a fact \texttt{grade} reporting the grade of that student.
+
+\subsection{Decision variables}
+
+For each student and for each subject that student is enrolled, his/her class is outputted. The domain of the class is the set of classes a subject has as stated in facts using predicate \texttt{schedule}.
+
+\subsection{Constraints}
+
+\subsubsection{Hard constraints}
+\begin{enumerate}
+    \item A student is either completely allocated to one of his/her chosen schedules, or not allocated at all (\textit{optional}: a student can be allocated another schedule different from any of the student's choices).
+    \item (\textit{Optional}) A student does not have overlapping classes in his/her allocated schedule.
+    \item The number of students in a class does not exceed the maximum capacity.
+\end{enumerate}
+
+\subsubsection{Soft constraints}
+\begin{enumerate}
+    \item Students are placed in decreasing order of their grades (i.e., the penalty for not placing a student in one of his options, or placing him/her in the most preferred option, is greater if his grade is larger).
+    \item The number of students per class in a given subject is balanced.
+    \item The number of students of even and odd number in a given class-subject is balanced.
+    \item (\textit{Optional}) Students should be allocated to their preferred schedules by order, where the first schedule option is the student's preferred and the last one the least preferred.
+\end{enumerate}
+
+\subsection{Evaluation function}
+
+In order to find the best solution to the problem, we defined which soft constraints have a higher priority for the final result.
+
+In this function we first consider the balance between students of even and odd IDs. The optimal ratio is 1, but if it is not possible to pair each odd-numbered student with an even-numbered student the same condition still makes sure that classes too distant from that ratio are penalized by using a square function. 
+
+We then verify, but with lower priority, if the number of students in a class of a given subject is balanced in respect to the other classes of this subject.
+\begin{equation}
+\begin{aligned}
+    c_i = & 3 \times \left(ClassSizeOdd - ClassSizeEven\right)^2 \\
+        + & 5 \times \left(ClassSize - AvgClassSizeInSubject\right)^2
+\end{aligned}
+\end{equation}
+
+In this function we also have in consideration the placement of each student, with a penalty based on the grade if a student is not placed in one of his/her options.
+\begin{equation}
+    s_i = g^i \times \begin{cases}
+        -1 : \text{Student was allocated to one of his/her options} \\
+        +1 : \text{Student was not allocated to one of his/her options}
+    \end{cases}
+\end{equation}
+
+The final function is $O$, and it is made of the sum of penalties for each class $c_i$ and for each student $s_i$. The objective is to minimize $O$.
+\begin{equation} 
+    O = \sum_{i \in C}{c_i} + \sum_{i \in St}{s_i}
+\end{equation}
+
+\section{Solution presentation}
+
+Predicate \texttt{solve(+Classes, +Students, -Solution)} should be called with the appropriate \texttt{Classes} and \texttt{Students} arrays to solve an instance of this problem.
+
+\texttt{Classes} is an array of structures \texttt{class(Subject, Class, TimeSlots)} and \texttt{Students} is an array of structures \texttt{student(ID, Grade, [Option1, Option2, ...])}. Solution is an array of structures \texttt{solution(ID, Allocation)} where \texttt{Allocation} is the schedule that student with a certain \texttt{ID} was allocated (ideally it is equal to one of the student's options, otherwise it is empty or has an allocation different from all the student's options).
+
+The solution array can be visualized by calling \texttt{write\_solution(+Solution)}. A complete run can be made by calling \texttt{sicstus -l test.pl}, which gives the following output:
+
+\lstinputlisting[caption={Sample output (\texttt{test.txt})}]{test.txt}
+
+\section{Experiments and results}
+
+All execution time values are averaged over three consecutive executions.
+
+\subsection{Dimensional analysis}
+
+While analysing dimensional analysis, we noticed there were some executions that took an extraordinarily long time, to then return to smaller execution times. We believe that is the result of different inputs, where some inputs require much more work because they define a much more demanding test case.
+
+We performed all dimensional analysis executions using labeling options \texttt{[ff, step]}, as they provided us with the smallest execution times.
+
+Time complexity depends in an approximately exponential way on the number of students, as per Figure \ref{fig:complexity-nstudents}.
+
+Time complexity depends in an approximately exponential way on the number of subjects, although not as strong as the dependency with number of students, Figure \ref{fig:complexity-nsubjects}.
+
+Time complexity depends in an approximately linear way on the number of classes, as the logarithm of the execution time first increases and then stabilizes, and the linearly-plotted execution time keeps increasing at a reasonably linear rate, Figure \ref{fig:complexity-nsubjects}.
+
+\newpage
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}[baseline]
+        \footnotesize
+        \begin{axis}[
+            height=54mm,
+            width=110mm,
+            grid=both,
+            grid style={dashed,black!50},
+            xlabel={Number of students}, % Set the labels
+            xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Execution time ($\SI{}{\milli\second}$)},
+            ymin=0, ymax=25000,
+            ytick distance=5000,
+            minor y tick num = 1,
+        ]
+            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis-students.csv};
+        \end{axis}
+        \begin{axis}[
+            axis y line*=right,
+            ymode=log,
+            axis x line=none,
+            height=54mm,
+            width=110mm,
+            grid=major,
+            grid style={dashed,black!50},
+            xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Exec. time, log-scale ($\SI{}{\milli\second}$)}, ylabel style={rotate=-180},
+            ymin=0.99999, ymax=100000,
+            ytick distance=10,
+        ]
+            \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis-students.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Execution time plotted against number of students (blue in left axis, red in right). The number of subjects and classes were kept constant, at 2 and 5 respectively.}\label{fig:complexity-nstudents}
+
+	\begin{tikzpicture}[baseline]
+        \footnotesize
+        \begin{axis}[
+            height=54mm,
+            width=110mm,
+            grid=both,
+            grid style={dashed,black!50},
+            xlabel={Number of subjects}, % Set the labels
+            xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Execution time ($\SI{}{\milli\second}$)},
+            ymin=0, ymax=25000,
+            ytick distance=5000,
+            minor y tick num = 1,
+        ]
+            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NSubjects,y=TotalRuntime,col sep=comma] {dimensional-analysis-subjects.csv};
+        \end{axis}
+        \begin{axis}[
+            axis y line*=right,
+            ymode=log,
+            axis x line=none,
+            height=54mm,
+            width=110mm,
+            grid=major,
+            grid style={dashed,black!50},
+            xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Exec. time, log-scale ($\SI{}{\milli\second}$)}, ylabel style={rotate=-180},
+            ymin=0.99999, ymax=100000,
+            ytick distance=10,
+        ]
+            \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NSubjects,y=TotalRuntime,col sep=comma] {dimensional-analysis-subjects.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Execution time plotted against number of subjects, two classes per subject (blue in left axis, red in right). The number of students was kept constant at 9.}\label{fig:complexity-nsubjects}
+
+    \begin{tikzpicture}[baseline]
+        \footnotesize
+        \begin{axis}[
+            height=54mm,
+            width=110mm,
+            grid=both,
+            grid style={dashed,black!50},
+            xlabel={Number of classes}, % Set the labels
+            xmin=3, xmax=14, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Execution time ($\SI{}{\milli\second}$)},
+            ymin=0, ymax=25000,
+            ytick distance=5000,
+            minor y tick num = 1,
+        ]
+            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NClasses,y=TotalRuntime,col sep=comma] {dimensional-analysis-classes.csv};
+        \end{axis}
+        \begin{axis}[
+            axis y line*=right,
+            ymode=log,
+            axis x line=none,
+            height=54mm,
+            width=110mm,
+            grid=major,
+            grid style={dashed,black!50},
+            xmin=3, xmax=14, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Exec. time, log-scale ($\SI{}{\milli\second}$)}, ylabel style={rotate=-180},
+            ymin=0.99999, ymax=100000,
+            ytick distance=10,
+        ]
+            \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NClasses,y=TotalRuntime,col sep=comma] {dimensional-analysis-classes.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Execution time plotted against number of classes (blue in left axis, red in right). Number of subjects and students was kept constant, at 2 and 9 respectively.}\label{fig:complexity-nclasses}
+\end{figure}
+
+\subsection{Search strategies}
+
+We tested all possible combinations of variable ordering and value selection options for the labeling step, Table \ref{tab:options}. We arrived at the conclusion that the most important factor was the choice of variable ordering, with \texttt{ff} and \texttt{occurence} giving the shortest execution times, around $\SI{100}{\milli\second}$. All other combinations had execution times above (and some quite above) $\SI{1000}{\milli\second}$, to the exception of \texttt{[min, step]} and \texttt{[min, bisect]} which had execution times around $\SI{800}{\milli\second}$.
+
+This can be interpreted if one considers the fact \texttt{leftmost} considers the order in which variables appear in the domain variables to be labelled, and in our case variable order does not bear any particular meaning as students can be ordered arbitrarily. \texttt{min} and \texttt{max} have poor performance because they consider the absolute limits of variables' domains, which again has no particular meaning in our case as the values are class IDs. As domains are continuous, \texttt{max\_regret} devolves into a behaviour similar to \texttt{leftmost}.
+
+On the other hand, \texttt{ff}, \texttt{ffc} and \texttt{occurence} have by far the best performances. This can be explained by the fact \texttt{ff} starts by labelling the variables with smallest domain and unties variables with the same domain size by choosing the left-most variable, meaning in a \textit{contrain and generate} system (as is the case) the solution tree ends up branching less and branches are cut more early on. \texttt{ffc} works similarly, except it unties variables with similarly small domains by choosing the most constrained variable (fundamentally works in the same way as \texttt{ff}). \texttt{occurence} also has a good performance due to the fact it first labels the variables that are most constrained (i.e., have more constraints suspended on them), which in practice is similar to having a smaller domain, hence benefitting from the \textit{contrain and generate} behaviour as \texttt{ff} does.
+
+\begin{table}[!h]
+    \centering
+    \caption{Execution time for different options, in milliseconds. We used the same randomly-generated input, with 2 subjects, 5 classes and 6 students.}\label{tab:options}
+    \begin{tabular}{| l | r r r r r |}
+        \hline
+        \textbf{\diagbox[width=12em]{Order}{Value selection}} & \texttt{step}              & \texttt{enum}              & \texttt{bisect}            & \texttt{median}             & \texttt{middle}            \\ \hline
+        \texttt{leftmost}                                     & $3474$ & $3500$ & $3365$ & $3374$ & $3367$ \\
+        \texttt{min}                                          & $ 828$ & $4379$ & $ 850$ & $4470$ & $4401$ \\
+        \texttt{max}                                          & $1575$ & $1665$ & $1513$ & $1631$ & $1770$ \\
+        \texttt{ff}                                           & $  66$ & $ 152$ & $  85$ & $  63$ & $  65$ \\
+        \texttt{anti\_first\_fail}                            & $5363$ & $4442$ & $3986$ & $4777$ & $4770$ \\
+        \texttt{occurence}                                    & $  80$ & $  72$ & $  83$ & $  81$ & $  70$ \\
+        \texttt{ffc}                                          & $ 100$ & $  60$ & $  58$ & $ 258$ & $  58$ \\
+        \texttt{max\_regret}                                  & $3339$ & $3461$ & $3390$ & $3333$ & $3478$ \\ \hline
+    \end{tabular}
+\end{table}
+
+\section{Conclusions and future work}
+
+We developed a program that finds solutions to the presented student--class alocation problem, although it only performs decently for scenarios smaller than the usual dimension of this sort of problems (tens of subjects and classes, and hundreds of students), since our program only gives an answer in reasonable time when the number of subjects is of the order of the unit and the number of classes and students of the order of small tens.
+
+This program uses hard restrictions and implements soft restrictions through a cost function to evaluate how good a solution is (the larger the cost, the worst the solution); the objective is to find a solution that minimizes that cost function.
+
+This work can be further improved by using custom heuristics and possibly an automaton to increase time performance.
+The script that generates random instances of the problem could also be improved to reflect more realistic settings, since most subjects of a certain course have approximately the same number of classes.
+Also the maximum class size is hardcoded to 30.
+
+The only constraints we did not implement were the two optional constraints, due to deadline restrictions.
+
+%
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+
+\bibliographystyle{llncs2e/splncs04}
+\bibliography{report}
+
+\end{document}
