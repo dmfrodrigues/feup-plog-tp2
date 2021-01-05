@@ -196,17 +196,34 @@ Time complexity is expected to depend linearly on the number of students.
 	\begin{tikzpicture}[baseline]
         \footnotesize
         \begin{axis}[
-            height=74mm,
-            width=63.5mm,
+            height=70mm,
+            width=100mm,
+            grid=both,
+            grid style={dashed,black!50},
+            xlabel={$a=T_{prop}/T_f$}, % Set the labels
+            xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Efficiency $S$},
+            ymin=0, ymax=50000,
+            ytick distance=10000,
+            minor y tick num = 1,
+        ]
+            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis.csv};
+        \end{axis}
+        \begin{axis}[
+            axis y line*=right,
+            ymode=log,
+            axis x line=none,
+            height=70mm,
+            width=100mm,
             grid=major,
             grid style={dashed,black!50},
             xlabel={$a=T_{prop}/T_f$}, % Set the labels
-            xmin=0, xmax=12, xtick distance=1, x tick label style={rotate=90},
+            xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
             ylabel={Efficiency $S$},
-            ymin=0, ymax=50000,
-            ytick distance=5000,
+            ymin=10, ymax=1000000,
+            ytick distance=10,
         ]
-            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x="NStudents      ",y="Total_runtime (ms)      ",col sep=comma] {../stats/dimensional-analysis.csv};
+            \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis.csv};
         \end{axis}
     \end{tikzpicture}
 \end{figure}
