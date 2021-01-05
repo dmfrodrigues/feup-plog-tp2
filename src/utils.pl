@@ -22,6 +22,9 @@ restrict_in_list(X, [X1|L], R) :-
     restrict_in_list(X, L, R1),
     R #<=> (X #= X1 #\/ R1 #= 1).
 
+restrict_count(_, [    ], N) :- N #= 0.
+restrict_count(X, [X1|L], N) :- restrict_count(X, L, N1), N #= N1 + (X #= X1).
+
 count([], _, 0).
 count([E|Es], E, N) :- !,
     count(Es, E, N1),
