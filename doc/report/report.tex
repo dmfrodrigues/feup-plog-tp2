@@ -54,8 +54,7 @@
 \renewcommand{\arraystretch}{1.1}
 \setlength\tabcolsep{5pt}
 
-\title{TuCoTuTeCo}
-\subtitle{Allocating students to classes during COVID-19}
+\title{Constraint optimization problem approach to student-class allocation during COVID-19 pandemic using SICStus Prolog}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
@@ -82,8 +81,9 @@ Due to the pandemic situation caused by COVID-19, educational institutions are f
 COP \and
 CLP \and
 Optimization \and
-Student-class problem \and
-Prolog}
+Student-class allocation \and
+Prolog \and
+COVID-19}
 \end{abstract}
 
 \section{Introduction}
@@ -91,7 +91,9 @@ Prolog}
 Student--class allocation is a routine problem for educational institutions, and is usually solved as a constrainted resource allocation problem where classes are the resources, the agents are the students and subject to constraints such as a student not having overlapping classes of different subjects and balancing class sizes.
 However, as a result of the COVID-19 pandemic, further constraints must be applied to increase physical distancing and reduce the number of contacts, such as more strongly enforcing class balancing, and also balancing the number of students with even and odd ID number in a class so students with even and odd IDs can have presential classes in alternating weeks.
 
-We will thus model this problem as a constraint optimization problem (COP) with a set of soft and hard constraints, and provide it with an evaluation function that should be optimized.
+The student--class allocation problem is a well-known problem, with space for more abstract and theoretical considerations \cite{abraham07} or otherwise more practical approaches using more sophisticated methods such as Multiagent Resource Allocation (MARA), where agents (usually students with different preferences) compete to shape the solution into one that benefits them the most and as such globally optimize the solution \cite{cano09}. We will add to this knowledge base by investigating how a student--class allocation problem with additional restrictions can be solved using a logic programming environment.
+
+We will take a very practical approach without neglecting any theoretical considerations that might be required to solve the problem; we will model this problem as a constraint optimization problem (COP) with a set of soft and hard constraints, and provide it with an evaluation function that should be optimized.
 We encoded the problem as a Prolog program using SICStus Prolog \cite{sicstus} and the constraint logic programming (CLP) module \texttt{clpfd} (\textit{CLP over Finite Domains}), with an interface to solve an instance of the problem.
 We then generate a set of different scenarios with varying dimensions to analyse the time complexity of the solution and the effect of using different search strategies.
 Finally we present the results of our experiments.
