@@ -1,4 +1,4 @@
-print_statistics_header :- format('Resumptions~11+,Entailments~12+,Prunings~9+,Backtracks~11+,Constraints~12+,Total_runtime~14+~n', []).
+print_statistics_header :- format('Resumptions~11+,Entailments~12+,Prunings~9+,Backtracks~11+,Constraints~12+,Total_runtime (ms)~19+~n', []).
 print_statistics :-
     fd_statistics(resumptions, Resumptions),
     fd_statistics(entailments, Entailments),
