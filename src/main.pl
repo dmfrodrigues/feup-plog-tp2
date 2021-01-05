@@ -42,6 +42,7 @@ solve(Classes, Students, Solution) :-
     evaluate(Classes, Students, Solution, Value),
     format("About to label~n", []),
     write(Vars), nl,
+    \+(ground(Vars)), \+(ground(Value)),
     format("L45~n", []),
     labeling([], Vars),
     format("L47~n", []),
