@@ -7,10 +7,10 @@
 max_ocupation(20).
 
 % restrict
-restrict(Classes, Students, Solution) :-            get_vars(Solution, Vars),  
-    restrict_students_options(Students, Solution),                              
-    restrict_classes_capacity(Students, Solution),                             
-    true. 
+restrict(Classes, Students, Solution) :-
+    restrict_students_options(Students, Solution),
+    restrict_classes_capacity(Students, Solution),
+    true.
 
 % restrict_students_options(+Students, +Solution)
 % 
@@ -45,6 +45,6 @@ my_count(X, [_|L], N) :- my_count(X, L, N).
 
 restrict_ocupation([], _) :-             !.
 restrict_ocupation([Class|Classes], Max) :-        
-    my_count(Class, [Class|Classes], N),           
+    my_count(Class, [Class|Classes], N),       
     N #=< Max,                                    
-    restrict_ocupation(Classes, Max)             .
+    restrict_ocupation(Classes, Max).
