@@ -192,7 +192,6 @@ Time complexity is expected to depend linearly on the number of students.
 
 \begin{figure}[h]
 	\centering
-	\caption{Efficiency $S$ plotted against $R_e$ on the x-axis and $a$ on the y-axis. The value of $S$ in each point of the mesh is determined from the average $T$ of three repetitions}\label{fig:S_aRe}
 	\begin{tikzpicture}[baseline]
         \footnotesize
         \begin{axis}[
@@ -200,10 +199,10 @@ Time complexity is expected to depend linearly on the number of students.
             width=100mm,
             grid=both,
             grid style={dashed,black!50},
-            xlabel={$a=T_{prop}/T_f$}, % Set the labels
+            xlabel={Number of students}, % Set the labels
             xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
-            ylabel={Efficiency $S$},
-            ymin=0, ymax=50000,
+            ylabel={Execution time ($\SI{}{\milli\second}$) [blue]},
+            ymin=0, ymax=20000,
             ytick distance=10000,
             minor y tick num = 1,
         ]
@@ -217,15 +216,15 @@ Time complexity is expected to depend linearly on the number of students.
             width=100mm,
             grid=major,
             grid style={dashed,black!50},
-            xlabel={$a=T_{prop}/T_f$}, % Set the labels
             xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
-            ylabel={Efficiency $S$},
+            ylabel={Execution time, log-scale ($\SI{}{\milli\second}$) [red]},
             ymin=10, ymax=1000000,
             ytick distance=10,
         ]
             \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis.csv};
         \end{axis}
     \end{tikzpicture}
+    \caption{Efficiency $S$ plotted against $R_e$ on the x-axis and $a$ on the y-axis. The value of $S$ in each point of the mesh is determined from the average $T$ of three repetitions}\label{fig:S_aRe}
 \end{figure}
 
 \section{Conclusions and future work}
