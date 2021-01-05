@@ -19,6 +19,8 @@
 \usepackage{subcaption}
 \usepackage{float}
 
+\usepackage{diagbox}
+
 \usepackage[binary-units=true]{siunitx} %SI units
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest} % Allows to place the legend below plot
@@ -168,43 +170,32 @@ The solution array can be visualized by calling \texttt{write\_solution(+Solutio
 
 \section{Experiments and results}
 
-No practical experiments on dimensional analysis or search strategies could be performed, as we found major difficulties trying to define the complex constraints that this problem required in Prolog.
+All execution time values are averaged over three consecutive executions.
 
 \subsection{Dimensional analysis}
 
-Time complexity is expected to depend linearly on the number of students.
+While analysing dimensional analysis, we noticed there were some executions that took an extraordinarily long time, to then return to smaller execution times. We believe that is the result of different inputs, where some inputs require much more work because they define a much more demanding test case.
 
-\begin{table}[!h]
-    \centering
-    \caption{Expected results for different ordering options}
-    \begin{tabular}{| l | r r r r r |}
-        \hline
-        \textbf{Order \textbackslash Value selection}& \texttt{step}              & \texttt{enum}              & \texttt{bisect}            & \texttt{median}             & \texttt{middle}            \\ \hline
-        \texttt{leftmost}                            & $\SI{5533}{\milli\second}$ & $\SI{5529}{\milli\second}$ & $\SI{5504}{\milli\second}$ & $\SI{ 8598}{\milli\second}$ & $\SI{8516}{\milli\second}$ \\
-        \texttt{min}                                 & $\SI{ 653}{\milli\second}$ & $\SI{6691}{\milli\second}$ & $\SI{ 548}{\milli\second}$ & $\SI{ 9392}{\milli\second}$ & $\SI{9402}{\milli\second}$ \\
-        \texttt{max}                                 & $\SI{1835}{\milli\second}$ & $\SI{1969}{\milli\second}$ & $\SI{2066}{\milli\second}$ & $\SI{ 3828}{\milli\second}$ & $\SI{3837}{\milli\second}$ \\
-        \texttt{ff}                                  & $\SI{ 169}{\milli\second}$ & $\SI{ 172}{\milli\second}$ & $\SI{ 161}{\milli\second}$ & $\SI{  161}{\milli\second}$ & $\SI{ 157}{\milli\second}$ \\
-        \texttt{anti\_first\_fail}                   & $\SI{7761}{\milli\second}$ & $\SI{6792}{\milli\second}$ & $\SI{8060}{\milli\second}$ & $\SI{10065}{\milli\second}$ & $\SI{9896}{\milli\second}$ \\
-        \texttt{occurence}                           & $\SI{ 284}{\milli\second}$ & $\SI{ 238}{\milli\second}$ & $\SI{ 284}{\milli\second}$ & $\SI{  236}{\milli\second}$ & $\SI{ 232}{\milli\second}$ \\
-        \texttt{ffc}                                 & $\SI{ 130}{\milli\second}$ & $\SI{ 151}{\milli\second}$ & $\SI{ 134}{\milli\second}$ & $\SI{  132}{\milli\second}$ & $\SI{ 160}{\milli\second}$ \\
-        \texttt{max\_regret}                         & $\SI{5331}{\milli\second}$ & $\SI{5598}{\milli\second}$ & $\SI{5507}{\milli\second}$ & $\SI{ 8536}{\milli\second}$ & $\SI{8584}{\milli\second}$ \\ \hline
-    \end{tabular}
-\end{table}
+We performed all dimensional analysis executions using labeling options \texttt{[ff, step]}, as they provided us with the smallest execution times.
 
-\subsection{Search strategies}
+Time complexity depends in an approximately exponential way on the number of students, as per Figure \ref{fig:complexity-nstudents}.
 
-\begin{figure}[h]
+Time complexity depends in an approximately exponential way on the number of subjects, although not as strong as the dependency with number of students, Figure \ref{fig:complexity-nsubjects}.
+
+Time complexity depends in an approximately linear way on the number of classes, as the logarithm of the execution time first increases and then stabilizes, and the linearly-plotted execution time keeps increasing at a reasonably linear rate, Figure \ref{fig:complexity-nsubjects}.
+
+\begin{figure}[!h]
 	\centering
 	\begin{tikzpicture}[baseline]
         \footnotesize
         \begin{axis}[
-            height=70mm,
-            width=100mm,
+            height=52mm,
+            width=110mm,
             grid=both,
             grid style={dashed,black!50},
             xlabel={Number of students}, % Set the labels
             xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
-            ylabel={Execution time ($\SI{}{\milli\second}$) [blue]},
+            ylabel={Execution time ($\SI{}{\milli\second}$)},
             ymin=0, ymax=25000,
             ytick distance=5000,
             minor y tick num = 1,
@@ -215,20 +206,115 @@ Time complexity is expected to depend linearly on the number of students.
             axis y line*=right,
             ymode=log,
             axis x line=none,
-            height=70mm,
-            width=100mm,
+            height=52mm,
+            width=110mm,
             grid=major,
             grid style={dashed,black!50},
             xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
-            ylabel={Execution time, log-scale ($\SI{}{\milli\second}$) [red]}, ylabel style={rotate=-180},
+            ylabel={Exec. time, log-scale ($\SI{}{\milli\second}$)}, ylabel style={rotate=-180},
             ymin=0.99999, ymax=100000,
             ytick distance=10,
         ]
             \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NStudents,y=TotalRuntime,col sep=comma] {dimensional-analysis.csv};
         \end{axis}
     \end{tikzpicture}
-    \caption{Execution time plotted against number of students. The number of subjects and classes were kept constant, at 2 and 5 respectively.}
+    \caption{Execution time plotted against number of students (blue in left axis, red in right). The number of subjects and classes were kept constant, at 2 and 5 respectively.}\label{fig:complexity-nstudents}
 \end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}[baseline]
+        \footnotesize
+        \begin{axis}[
+            height=52mm,
+            width=110mm,
+            grid=both,
+            grid style={dashed,black!50},
+            xlabel={Number of subjects}, % Set the labels
+            xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Execution time ($\SI{}{\milli\second}$)},
+            ymin=0, ymax=25000,
+            ytick distance=5000,
+            minor y tick num = 1,
+        ]
+            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NSubjects,y=TotalRuntime,col sep=comma] {dimensional-analysis-subjects.csv};
+        \end{axis}
+        \begin{axis}[
+            axis y line*=right,
+            ymode=log,
+            axis x line=none,
+            height=52mm,
+            width=110mm,
+            grid=major,
+            grid style={dashed,black!50},
+            xmin=1, xmax=12, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Exec. time, log-scale ($\SI{}{\milli\second}$)}, ylabel style={rotate=-180},
+            ymin=0.99999, ymax=100000,
+            ytick distance=10,
+        ]
+            \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NSubjects,y=TotalRuntime,col sep=comma] {dimensional-analysis-subjects.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Execution time plotted against number of subjects, two classes per subject (blue in left axis, red in right). The number of students was kept constant at 9.}\label{fig:complexity-nsubjects}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}[baseline]
+        \footnotesize
+        \begin{axis}[
+            height=52mm,
+            width=110mm,
+            grid=both,
+            grid style={dashed,black!50},
+            xlabel={Number of subjects}, % Set the labels
+            xmin=3, xmax=14, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Execution time ($\SI{}{\milli\second}$)},
+            ymin=0, ymax=25000,
+            ytick distance=5000,
+            minor y tick num = 1,
+        ]
+            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x=NClasses,y=TotalRuntime,col sep=comma] {dimensional-analysis-classes.csv};
+        \end{axis}
+        \begin{axis}[
+            axis y line*=right,
+            ymode=log,
+            axis x line=none,
+            height=52mm,
+            width=110mm,
+            grid=major,
+            grid style={dashed,black!50},
+            xmin=3, xmax=14, xtick distance=1, %x tick label style={rotate=90},
+            ylabel={Exec. time, log-scale ($\SI{}{\milli\second}$)}, ylabel style={rotate=-180},
+            ymin=0.99999, ymax=100000,
+            ytick distance=10,
+        ]
+            \addplot[red, mark=*, mark options={mark size=1.5pt}] table[x=NClasses,y=TotalRuntime,col sep=comma] {dimensional-analysis-classes.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Execution time plotted against number of classes (blue in left axis, red in right). Number of subjects and students was kept constant, at 2 and 9 respectively.}\label{fig:complexity-nclasses}
+\end{figure}
+
+\subsection{Search strategies}
+
+We tested all possible combinations of variable ordering and value selection options for the labeling step, Table \ref{tab:options}. We arrived at the conclusion that the most important factor was the choice of variable ordering, with \texttt{ff} and \texttt{ffc} giving the shortest execution times, around $\SI{150}{\milli\second}$. Aside from that, only \texttt{occurence} also provided decent execution times, at around $\SI{250}{\milli\second}$. All other combinations had execution times above (and some quite above) $\SI{1000}{\milli\second}$, to the exception of \texttt{[min, step]} and \texttt{[min, bisect]} which had execution times around $\SI{600}{\milli\second}$.
+
+\begin{table}[!h]
+    \centering
+    \caption{Execution time for different options, in milliseconds. We used the same randomly-generated input, with 2 subjects, 5 classes and 7 students.}\label{tab:options}
+    \begin{tabular}{| l | r r r r r |}
+        \hline
+        \textbf{\diagbox[width=12em]{Order}{Value selection}} & \texttt{step}              & \texttt{enum}              & \texttt{bisect}            & \texttt{median}             & \texttt{middle}            \\ \hline
+        \texttt{leftmost}                                     & $5533$ & $5529$ & $5504$ & $ 8598$ & $8516$ \\
+        \texttt{min}                                          & $ 653$ & $6691$ & $ 548$ & $ 9392$ & $9402$ \\
+        \texttt{max}                                          & $1835$ & $1969$ & $2066$ & $ 3828$ & $3837$ \\
+        \texttt{ff}                                           & $ 169$ & $ 172$ & $ 161$ & $  161$ & $ 157$ \\
+        \texttt{anti\_first\_fail}                            & $7761$ & $6792$ & $8060$ & $10065$ & $9896$ \\
+        \texttt{occurence}                                    & $ 284$ & $ 238$ & $ 284$ & $  236$ & $ 232$ \\
+        \texttt{ffc}                                          & $ 130$ & $ 151$ & $ 134$ & $  132$ & $ 160$ \\
+        \texttt{max\_regret}                                  & $5331$ & $5598$ & $5507$ & $ 8536$ & $8584$ \\ \hline
+    \end{tabular}
+\end{table}
 
 \section{Conclusions and future work}
 
