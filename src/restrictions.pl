@@ -39,9 +39,8 @@ restrict_classes_capacity(Students, Solution) :-
     max_ocupation(Max),                            
     restrict_ocupation(Classes, Max).
 
-my_count(_, [], 0) :- !.
-my_count(X, [X|L], N) :- !, my_count(X, L, N1), N is N1+1.
-my_count(X, [_|L], N) :- my_count(X, L, N).
+my_count(_, [    ], Value) :- Value #= 0.
+my_count(X, [X1|L], Value) :- my_count(X, L, Value1), Value #= Value1 + (X #= X1).
 
 restrict_ocupation([], _) :-             !.
 restrict_ocupation([Class|Classes], Max) :-        
