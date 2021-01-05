@@ -34,19 +34,21 @@
 
 % solve(+Subjects, +Students, -Solution)
 % Finds a solution for the given Subjects and Students.
-solve(Classes, Students, Solution) :-
+solve(Classes, Students, Solution) :- solve(Classes, Students, [], Solution).
+solve(Classes, Students, Options, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
     get_vars(Solution, Vars),
-    format(user_error, "Going to restrict~n", []),
+    % format(user_error, "Going to restrict~n", []),
     restrict(Classes, Students, Solution),
-    format(user_error, "Going to evaluate~n", []),
+    % format(user_error, "Going to evaluate~n", []),
     evaluate(Classes, Students, Solution, Value),
-    format(user_error, "Going to label~n", []),
+    % format(user_error, "Going to label~n", []),
     \+(ground(Vars)), \+(ground(Value)),
-    format(user_error, "Vars  = ", []), write(user_error, Vars ), nl,
-    format(user_error, "Value = ", []), write(user_error, Value), nl,
-    labeling([minimize(Value)], [Value|Vars]),
-    format(user_error, "Labelled~n", []),
+    % format(user_error, "Vars  = ", []), write(user_error, Vars ), format(user_error, "~n", []),
+    % format(user_error, "Value = ", []), write(user_error, Value), format(user_error, "~n", []),
+    labeling([best, minimize(Value)|Options], [Value|Vars]),
+    % format(user_error, "Labelled~n", []),
+    % format(user_error, "Value=", []), write(user_error, Value), format(user_error, "~n", []),
     true.
 
 get_vars([], []) :- !.
@@ -72,8 +74,15 @@ get_vars([solution(_, Vars1)|Solution], Vars) :-
         student(201806434, 18, [1,2], [[1, 3], [1, 4], [1, 5]])
     ],
     % generate(10, 50, 150, Classes, Students),
-    solve(Classes, Students, Solution),
-    write_solution(Solution),
-    print_statistics_header,
-    print_statistics,
+    format('Option         ~15+,', []),                                                            print_statistics_header,
+    format('(nothing)      ~15+,', []), solve(Classes, Students, [                  ], Solution1), print_statistics,
+    format('leftmost       ~15+,', []), solve(Classes, Students, [leftmost          ], Solution2), print_statistics,
+    format('min            ~15+,', []), solve(Classes, Students, [min               ], Solution3), print_statistics,
+    format('max            ~15+,', []), solve(Classes, Students, [max               ], Solution4), print_statistics,
+    format('ff             ~15+,', []), solve(Classes, Students, [ff                ], Solution5), print_statistics,
+    format('anti_first_fail~15+,', []), solve(Classes, Students, [anti_first_fail   ], Solution6), print_statistics,
+    format('occurrence     ~15+,', []), solve(Classes, Students, [occurrence        ], Solution7), print_statistics,
+    format('ffc            ~15+,', []), solve(Classes, Students, [ffc               ], Solution8), print_statistics,
+    format('max_regret     ~15+,', []), solve(Classes, Students, [max_regret        ], Solution9), print_statistics,
+    % write_solution(Solution),
     true.
