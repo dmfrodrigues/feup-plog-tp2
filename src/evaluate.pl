@@ -37,9 +37,9 @@ number_of_odd_in_class(Class, [solution(ID, Allocation)|RSolution], N):-
     N #= N1 + (R #= 1 #/\ mod(ID, 2) #= 1).
 
 class_size(_, [], N) :- N #= 0.
-class_size(class(_, ID, _), [solution(_ID, Allocation)|T], N):-
+class_size(class(Subject, ID, Times), [solution(_ID, Allocation)|T], N):-
     restrict_in_list(ID, Allocation, R),
-    class_size(Class, T, N1),
+    class_size(class(Subject, ID, Times), T, N1),
     N #= N1 + (R #= 1).
 
 all_classes_of_subject([], _, []).
