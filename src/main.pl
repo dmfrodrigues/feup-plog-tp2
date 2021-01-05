@@ -5,6 +5,7 @@
     reconsult('declare_and_domains.pl'),
     reconsult('restrictions.pl'),
     reconsult('generate.pl'),
+    reconsult('display.pl'),
     reconsult('../stats/stats.pl').
 
 %   class(S, C, Times)
@@ -34,18 +35,15 @@
 % Finds a solution for the given Subjects and Students.
 solve(Classes, Students, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
-    get_vars(Solution, Vars), write(Vars), nl,
+    get_vars(Solution, Vars),
     format("Going to restrict~n", []),
     restrict(Classes, Students, Solution),
-    write(Vars), nl,
     format("Going to evaluate~n", []),
     evaluate(Classes, Students, Solution, Value),
-    format("About to label~n", []),
-    write(Vars), nl,
+    format("Going to label~n", []),
     \+(ground(Vars)), \+(ground(Value)),
-    format("L45~n", []),
     labeling([minimize(Value)], Vars),
-    format("L47~n", []),
+    format("Labelled~n", []),
     true.
 
 number_of_even_in_class(_Class, [], N) :- N #= 0.
@@ -112,29 +110,15 @@ evaluate_allocation([Student|T], Solution, Value):-
     evaluate_allocation(T, Solution, NValue2),
     Value #= NValue1 + NValue2.
 
-evaluate(Classes, Students, Solution, Value):-          get_vars(Solution, Vars),   format("L125, ", []), write(Vars), nl,
-    evaluate_classes(Classes, Classes, Solution, C),                                format("L126, ", []), write(Vars), format(", ", []), write(C), nl,
-    evaluate_allocation(Students, Solution, S),                                     format("L127, ", []), write(Vars), format(", ", []), write(S), nl,
+evaluate(Classes, Students, Solution, Value):-
+    evaluate_classes(Classes, Classes, Solution, C),
+    evaluate_allocation(Students, Solution, S),
     Value #= C + S.
 
 get_vars([], []) :- !.
 get_vars([solution(_, Vars1)|Solution], Vars) :-
     get_vars(Solution, Vars2),
     append(Vars1, Vars2, Vars).
-
-% write_solution(A) :- write(A).
-
-write_solution([]) :- !.
-write_solution([solution(ID, Allocation)|Solution]) :-
-    format('~d ', ID),
-    write_sol(solution(ID, Allocation)),
-    format('~n', []),
-    write_solution(Solution).
-
-write_sol(solution(_ID, [])) :- !.
-write_sol(solution(ID, [A|Allocation])) :-
-    format('~d ', A),
-    write_sol(solution(ID, Allocation)).
 
 :-
     Classes = [
