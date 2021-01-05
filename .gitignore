@@ -31,7 +31,7 @@ COMMIT.tex
 stats/stats_transmitter
 stats/stats_receiver
 stats/do_stats
-stats/*.csv
+# stats/*.csv
 stats/*.xlsx
 stats/*.gif
 stats/*.png

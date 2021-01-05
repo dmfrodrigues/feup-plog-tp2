@@ -11,7 +11,22 @@
 % to display URLs in blue roman font according to Springer's eBook style:
 % \renewcommand\UrlFont{\color{blue}\rmfamily}
 
+% Graphics and images
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{automata, positioning, arrows}
+\usepackage[justification=centering,font=small,skip=0.5em]{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
 \usepackage[binary-units=true]{siunitx} %SI units
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest} % Allows to place the legend below plot
+\usepgfplotslibrary{units} % Allows to enter the units nicely
+\sisetup{
+  round-mode          = places,
+  round-precision     = 2,
+}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -171,6 +186,29 @@ Time complexity is expected to depend linearly on the number of students.
         \texttt{ffc}               & May be a bit faster                                    \\
         \texttt{max\_regret}       & - \\ \hline
     \end{tabular}
+\end{figure}
+
+\subsection{Search strategies}
+
+\begin{figure}[h]
+	\centering
+	\caption{Efficiency $S$ plotted against $R_e$ on the x-axis and $a$ on the y-axis. The value of $S$ in each point of the mesh is determined from the average $T$ of three repetitions}\label{fig:S_aRe}
+	\begin{tikzpicture}[baseline]
+        \footnotesize
+        \begin{axis}[
+            height=74mm,
+            width=63.5mm,
+            grid=major,
+            grid style={dashed,black!50},
+            xlabel={$a=T_{prop}/T_f$}, % Set the labels
+            xmin=0, xmax=12, xtick distance=1, x tick label style={rotate=90},
+            ylabel={Efficiency $S$},
+            ymin=0, ymax=50000,
+            ytick distance=5000,
+        ]
+            \addplot[blue, mark=*, mark options={mark size=1.5pt}] table[x="NStudents      ",y="Total_runtime (ms)      ",col sep=comma] {../stats/dimensional-analysis.csv};
+        \end{axis}
+    \end{tikzpicture}
 \end{figure}
 
 \section{Conclusions and future work}
