@@ -2,7 +2,7 @@
     reconsult('../src/main.pl').
 
 :-
-    generate(2, 5, 7, Classes, Students),
+    generate(2, 5, 6, Classes, Students),
     format('Option         ,', []),                                                                                                                                                                         print_statistics_header(_),
     
     format('leftmost        & step  ,', []), solve(Classes, Students, [step  , leftmost          ], _, Value01), solve(Classes, Students, [step  , leftmost          ], _, _), solve(Classes, Students, [step  , leftmost          ], _, _), print_statistics(Value01, 3),

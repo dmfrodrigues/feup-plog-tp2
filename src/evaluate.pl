@@ -17,7 +17,7 @@ evaluate_classes(AllClasses, [Class|T], Solution, Value):-
     class_size(Class, Solution, ClassSize),
     avg_class_size_in_subject(AllClasses, Subject, Solution, Average),
 
-    NValue1 #= 1*(Odds-Evens)*(Odds-Evens) + 2*(ClassSize-Average)*(ClassSize-Average),
+    NValue1 #= 3*(Odds-Evens)*(Odds-Evens) + 5*(ClassSize-Average)*(ClassSize-Average),
 
     evaluate_classes(AllClasses, T, Solution, NValue2),
     Value #= NValue1 + NValue2.
@@ -61,9 +61,9 @@ avg_class_size_in_subject(Classes, Subject, Solution, Average):-
     (TotalSubjectClasses == 0 -> Average is 0 ; Average is Sum/TotalSubjectClasses).
 
 evaluate_allocation([], _, Value) :- Value #= 0.
-evaluate_allocation([Student|T], Solution, Value):-
-    check_allocation(Student, Solution, R),
-    NValue1 #= 1*(1-2*R),
+evaluate_allocation([student(ID, Grade, Subjects, Options)|T], Solution, Value):-
+    check_allocation(student(ID, Grade, Subjects, Options), Solution, R),
+    NValue1 #= 1*(1-2*R)*Grade,
     evaluate_allocation(T, Solution, NValue2),
     Value #= NValue1 + NValue2.
 

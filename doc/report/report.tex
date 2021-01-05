@@ -312,22 +312,26 @@ Time complexity depends in an approximately linear way on the number of classes,
 
 \subsection{Search strategies}
 
-We tested all possible combinations of variable ordering and value selection options for the labeling step, Table \ref{tab:options}. We arrived at the conclusion that the most important factor was the choice of variable ordering, with \texttt{ff} and \texttt{ffc} giving the shortest execution times, around $\SI{150}{\milli\second}$. Aside from that, only \texttt{occurence} also provided decent execution times, at around $\SI{250}{\milli\second}$. All other combinations had execution times above (and some quite above) $\SI{1000}{\milli\second}$, to the exception of \texttt{[min, step]} and \texttt{[min, bisect]} which had execution times around $\SI{600}{\milli\second}$.
+We tested all possible combinations of variable ordering and value selection options for the labeling step, Table \ref{tab:options}. We arrived at the conclusion that the most important factor was the choice of variable ordering, with \texttt{ff} and \texttt{occurence} giving the shortest execution times, around $\SI{100}{\milli\second}$. All other combinations had execution times above (and some quite above) $\SI{1000}{\milli\second}$, to the exception of \texttt{[min, step]} and \texttt{[min, bisect]} which had execution times around $\SI{800}{\milli\second}$.
+
+This can be interpreted if one considers the fact \texttt{leftmost} considers the order in which variables appear in the domain variables to be labelled, and in our case variable order does not bear any particular meaning as students can be ordered arbitrarily. \texttt{min} and \texttt{max} have poor performance because they consider the absolute limits of variables' domains, which again has no particular meaning in our case as the values are class IDs. As domains are continuous, \texttt{max\_regret} devolves into a behaviour similar to \texttt{leftmost}.
+
+On the other hand, \texttt{ff}, \texttt{ffc} and \texttt{occurence} have by far the best performances. This can be explained by the fact \texttt{ff} starts by labelling the variables with smallest domain and unties variables with the same domain size by choosing the left-most variable, meaning in a \textit{contrain and generate} system (as is the case) the solution tree ends up branching less and branches are cut more early on. \texttt{ffc} works similarly, except it unties variables with similarly small domains by choosing the most constrained variable (fundamentally works in the same way as \texttt{ff}). \texttt{occurence} also has a good performance due to the fact it first labels the variables that are most constrained (i.e., have more constraints suspended on them), which in practice is similar to having a smaller domain, hence benefitting from the \textit{contrain and generate} behaviour as \texttt{ff} does.
 
 \begin{table}[!h]
     \centering
-    \caption{Execution time for different options, in milliseconds. We used the same randomly-generated input, with 2 subjects, 5 classes and 7 students.}\label{tab:options}
+    \caption{Execution time for different options, in milliseconds. We used the same randomly-generated input, with 2 subjects, 5 classes and 6 students.}\label{tab:options}
     \begin{tabular}{| l | r r r r r |}
         \hline
         \textbf{\diagbox[width=12em]{Order}{Value selection}} & \texttt{step}              & \texttt{enum}              & \texttt{bisect}            & \texttt{median}             & \texttt{middle}            \\ \hline
-        \texttt{leftmost}                                     & $5533$ & $5529$ & $5504$ & $ 8598$ & $8516$ \\
-        \texttt{min}                                          & $ 653$ & $6691$ & $ 548$ & $ 9392$ & $9402$ \\
-        \texttt{max}                                          & $1835$ & $1969$ & $2066$ & $ 3828$ & $3837$ \\
-        \texttt{ff}                                           & $ 169$ & $ 172$ & $ 161$ & $  161$ & $ 157$ \\
-        \texttt{anti\_first\_fail}                            & $7761$ & $6792$ & $8060$ & $10065$ & $9896$ \\
-        \texttt{occurence}                                    & $ 284$ & $ 238$ & $ 284$ & $  236$ & $ 232$ \\
-        \texttt{ffc}                                          & $ 130$ & $ 151$ & $ 134$ & $  132$ & $ 160$ \\
-        \texttt{max\_regret}                                  & $5331$ & $5598$ & $5507$ & $ 8536$ & $8584$ \\ \hline
+        \texttt{leftmost}                                     & $3474$ & $3500$ & $3365$ & $3374$ & $3367$ \\
+        \texttt{min}                                          & $ 828$ & $4379$ & $ 850$ & $4470$ & $4401$ \\
+        \texttt{max}                                          & $1575$ & $1665$ & $1513$ & $1631$ & $1770$ \\
+        \texttt{ff}                                           & $  66$ & $ 152$ & $  85$ & $  63$ & $  65$ \\
+        \texttt{anti\_first\_fail}                            & $5363$ & $4442$ & $3986$ & $4777$ & $4770$ \\
+        \texttt{occurence}                                    & $  80$ & $  72$ & $  83$ & $  81$ & $  70$ \\
+        \texttt{ffc}                                          & $ 100$ & $  60$ & $  58$ & $ 258$ & $  58$ \\
+        \texttt{max\_regret}                                  & $3339$ & $3461$ & $3390$ & $3333$ & $3478$ \\ \hline
     \end{tabular}
 \end{table}
 
