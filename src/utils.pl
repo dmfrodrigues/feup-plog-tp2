@@ -1,10 +1,21 @@
 :-
     use_module(library(clpfd)).
 
-restrict_equal_arrays([], []) :- !.
-restrict_equal_arrays([X1|L1], [X2|L2]) :-
-    X1 #= X2,
-    restrict_equal_arrays(L1, L2).
+restrict_equal_arrays([], [], R) :- R #= 1.
+restrict_equal_arrays([X1|L1], [X2|L2], R) :-
+    restrict_equal_arrays(L1, L2, R1),
+    R #<=> ((X1 #= X2) #/\ R1).
+
+restrict_array_in_list_of_arrays(_, [], R) :- R #= 1.
+restrict_array_in_list_of_arrays(L, [L1|D], R) :-
+    restrict_equal_arrays(L, L1, R1),
+    restrict_array_in_list_of_arrays(L, D, R2),
+    R #<=> (R1 #= 1 #\/ R2 #= 1).
+
+restrict_domain([], _, _, R) :- R #= 1.
+restrict_domain([X|L], Min, Max, R) :-
+    restrict_domain(L, Min, Max, R1),
+    R #<=> (R1 #/\ (Min #=< X #/\ X #=< Max)).
 
 count([], _, 0).
 count([E|Es], E, N) :- !,

@@ -35,11 +35,13 @@
 solve(Classes, Students, Solution) :-
     declare_and_domains(Classes, Students, Solution),       % Declare solution array
     get_vars(Solution, Vars), write(Vars), nl,
-    format("Got vars~n", []),
     format("Going to restrict~n", []),
     restrict(Classes, Students, Solution),
+    write(Vars), nl,
+    format("Going to evaluate~n", []),
     evaluate(Classes, Students, Solution, Value),
     format("About to label~n", []),
+    write(Vars), nl,
     labeling([], Vars),
     true.
 

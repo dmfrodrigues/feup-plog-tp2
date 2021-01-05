@@ -8,7 +8,7 @@ max_ocupation(20).
 
 % restrict
 restrict(Classes, Students, Solution) :-            get_vars(Solution, Vars),  
-    % restrict_students_options(Students, Solution),                              
+    restrict_students_options(Students, Solution),                              
     restrict_classes_capacity(Students, Solution),                             
     true. 
 
@@ -26,17 +26,12 @@ restrict_students_options(
 % - A student is either completely allocated to one of his/her chosen schedules,
 % or not allocated at all.
 restrict_student_options(
-    student(ID, Grade, Subjects, [Option|Options]),
+    student(ID, Grade, Subjects, Options),
     solution(ID, Allocation)
 ) :-
-    restrict_equal_arrays(Allocation, Option)
-    #\/
-    restrict_student_options(
-        student(ID, Grade, Subjects, Options),
-        solution(ID, Allocation)
-    )
-    #\/
-    domain(Allocation, 0, 0).
+    restrict_array_in_list_of_arrays(Allocation, Options, R1),
+    restrict_domain(Allocation, 0, 0, R2),
+    (R1 #= 1 #\/ R2 #= 1).
 
 % Restrict each class to the maximum capacity
 restrict_classes_capacity(Students, Solution) :-
