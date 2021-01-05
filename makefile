@@ -15,5 +15,6 @@ $(ZIPNAME).zip: doc/report/report.pdf
 	rm -rf $(ZIPNAME)
 	mkdir -p $(ZIPNAME)
 	cp -r doc/report/report.pdf doc/report/test.txt src stats LICENSE README.md $(ZIPNAME)
+	cd $(ZIPNAME) && zip -r ../$(ZIPNAME).zip .
 
 FORCE:
