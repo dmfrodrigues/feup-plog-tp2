@@ -10,13 +10,13 @@ Distributed under the terms of the GNU General Public License, version 3
 ![report](https://github.com/dmfrodrigues/feup-plog-tp2/workflows/report/badge.svg)
 ![zip](https://github.com/dmfrodrigues/feup-plog-tp2/workflows/zip/badge.svg)
 
-- **Project name:** TeCoTuTeCo - ​Te​cnologia de ​Co​locação em ​Tu​rmas em ​Te​mpos de ​Co​vid (Class Allocation Technology in Covid Times)
+- **Project name:** TeCoTuTeCo - Tecnologia de Colocação em Turmas em Tempos de Covid (Class Allocation Technology in Covid Times)
 - **Short description:** Program to allocate students to classes, satisfying several restrictions imposed by common sense and by the pandemic situation
 - **Environment:** SICStus Prolog
 - **Tools:** Prolog
 - **Institution:** [FEUP](https://sigarra.up.pt/feup/en/web_page.Inicial)
 - **Course:** [PLOG](https://sigarra.up.pt/feup/en/UCURR_GERAL.FICHA_UC_VIEW?pv_ocorrencia_id=459482) (Logic Programming)
-<!-- - **Project grade:** ??.?/20.0 -->
+- **Project grade:** 18.1/20.0
 - **TP class:** 3MIEIC02
 - **Group:** TeCoTuTeCo_4
 - **Group members:**
